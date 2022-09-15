@@ -3,7 +3,8 @@
 #include <string>
 
 enum class TokenType {
-    COLON,
+    COMMA,
+	COLON,
     COLON_DASH,
     // TODO: add the other types of tokens
     UNDEFINED
