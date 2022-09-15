@@ -5,6 +5,12 @@
 int main(int argc, char** argv) {
 	std::string fileString = "";
 
+	//Test code for Token
+//	Token myComma(TokenType::COMMA, "This is a comma", 5);
+//	Token myAdd(TokenType::ADD, "+", 7);
+//	myComma.toString();
+//	myAdd.toString();
+
 	// Prep fileString ------------------------------------------------------------------
 	// Prints Argc and Argv values
 //	std::cout << "argc: " << argc << std::endl;		// Debug
@@ -25,7 +31,9 @@ int main(int argc, char** argv) {
 		std::cerr << "Failed";
 	}
 
-	// Fill fileString with chars from text
+	/* Fill fileString with chars from text
+	 * This does not read in EOF
+	 */
 	while(textFile.peek() != EOF) {
 //		std::cout << "peek(): " << textFile.peek() << std::endl;	// Debug
 		fileString.push_back(textFile.get());
@@ -38,7 +46,7 @@ int main(int argc, char** argv) {
 
 
 	// TODO print tokens from Lexar class in specified format
-
+	lexer->printTokens();
 
 	// Dealocate memory
     delete lexer;

@@ -1,6 +1,7 @@
 #ifndef TOKEN_H
 #define TOKEN_H
 #include <string>
+#include <iostream>
 
 enum class TokenType {
     COMMA,
@@ -20,19 +21,21 @@ enum class TokenType {
 	STRING,
 	COMMENT,
     UNDEFINED,		// Previously here
-	//EOF	//FIXME what do I name this!??
+	EOF_TOKEN		//FIXME watch the naming here!
 };
 
 class Token
 {
 private:
-    // TODO: add member variables for information needed by Token
+    // Member variables for information needed by Token
+	TokenType type;
+	std::string description;
+	int lineNumber;
 
 public:
     Token(TokenType type, std::string description, int line);
-
-    // TODO: add other needed methods
+	void toString();
+	std::string TokenTypeToString(TokenType type);		//FIXME test to see if this works
 };
 
 #endif // TOKEN_H
-
