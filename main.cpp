@@ -32,16 +32,15 @@ int main(int argc, char** argv) {
 //		std::cout << "fileString: " << fileString << std::endl;		// Debug
 	}
 
-
+	// Pass input to lexar and run it --------------------------------------------------
     Lexer* lexer = new Lexer();
-    // TODO pass input to lexar and let it run
+    lexer->Run(fileString);
 
 
 	// TODO print tokens from Lexar class in specified format
 
 
-	// TODO dealocate memory
-
+	// Dealocate memory
     delete lexer;
 
     return 0;

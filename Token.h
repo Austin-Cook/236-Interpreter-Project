@@ -4,10 +4,23 @@
 
 enum class TokenType {
     COMMA,
-	COLON,
-    COLON_DASH,
-    // TODO: add the other types of tokens
-    UNDEFINED
+	PERIOD,
+	Q_MARK,
+	LEFT_PAREN,
+	RIGHT_PAREN,
+	COLON,			// Previously here
+    COLON_DASH,		// Previously here
+	MULTIPLY,
+	ADD,
+	SCHEMES,
+	FACTS,
+	RULES,
+	QUERIES,
+	ID,
+	STRING,
+	COMMENT,
+    UNDEFINED,		// Previously here
+	//EOF	//FIXME what do I name this!??
 };
 
 class Token
