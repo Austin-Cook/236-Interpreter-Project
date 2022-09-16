@@ -79,7 +79,7 @@ void Lexer::Run(std::string& input) {
 		//            set maxAutomaton to automaton
 		//        }
 		//    }
-		for (int i = 0; i < automata.size(); i++) {
+		for (int i = 0; i < (int)automata.size(); i++) {
 			int inputRead = automata[i]->Start(input);
 			if(inputRead > maxRead) {
 				maxRead = inputRead;
@@ -136,7 +136,7 @@ void Lexer::Run(std::string& input) {
 }
 
 void Lexer::printTokens() {
-	for(int i = 0; i < tokens.size(); ++i) {
+	for(int i = 0; i < (int)tokens.size(); ++i) {		//FIXME does casting to int fix error?
 		tokens[i]->toString();
 	}
 }
