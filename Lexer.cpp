@@ -139,4 +139,6 @@ void Lexer::printTokens() {
 	for(int i = 0; i < (int)tokens.size(); ++i) {		//FIXME does casting to int fix error?
 		tokens[i]->toString();
 	}
+	std::cout << "Total Tokens = " << tokens.size();
+	//FIXME here is where I need to add that last line
 }
