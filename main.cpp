@@ -24,7 +24,7 @@ int main(int argc, char** argv) {
 	}
 
 	// Open file
-	std::string fileName = argv[2];
+	std::string fileName = argv[1];	//FIXME to run on Clion, this must be argv[2], otherwise argv[1]
 //	std::cout << "fileName being read in: " << fileName << std::endl;		// Debug
 	std::ifstream textFile(fileName);
 	if(textFile.fail()) {
