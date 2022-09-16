@@ -1,6 +1,21 @@
 #include "Lexer.h"
 #include "ColonAutomaton.h"
 #include "ColonDashAutomaton.h"
+#include "CommaAutomaton.h"
+#include "PeriodAutomaton.h"
+#include "Q_MarkAutomaton.h"
+#include "Left_ParenAutomaton.h"
+#include "Right_ParenAutomaton.h"
+#include "MultiplyAutomaton.h"
+#include "AddAutomaton.h"
+
+#include "SchemesAutomaton.h"
+#include "FactsAutomaton.h"
+#include "RulesAutomaton.h"
+#include "QueriesAutomaton.h"
+#include "IdAutomaton.h"
+#include "StringAutomaton.h"
+#include "LineCommentAutomaton.h"
 
 #include <cctype>
 
@@ -13,9 +28,25 @@ Lexer::~Lexer() {
 }
 
 void Lexer::CreateAutomata() {
-    automata.push_back(new ColonAutomaton());
+	automata.push_back(new CommaAutomaton());
+	automata.push_back(new PeriodAutomaton());
+	automata.push_back(new Q_MarkAutomaton);
+	automata.push_back(new Left_ParenAutomaton);
+	automata.push_back(new Right_ParenAutomaton);
+	automata.push_back(new ColonAutomaton());
     automata.push_back(new ColonDashAutomaton());
-    // TODO: Add the other needed automata here
+	automata.push_back(new MultiplyAutomaton());
+	automata.push_back(new AddAutomaton());
+
+	automata.push_back(new SchemesAutomaton());
+	automata.push_back(new FactsAutomaton());
+	automata.push_back(new RulesAutomaton());
+	automata.push_back(new QueriesAutomaton());
+	automata.push_back(new IdAutomaton);
+	automata.push_back(new StringAutomaton);		//FIXME
+	automata.push_back(new LineCommentAutomaton);
+
+	// TODO: Add the other needed automata here
 }
 
 void Lexer::Run(std::string& input) {
@@ -80,7 +111,7 @@ void Lexer::Run(std::string& input) {
 		// UNDEFINED of whitespace
 		else {
 			maxRead = 1;
-			std::string description = ";";
+			std::string description = "";
 			if(!isspace(input[0])) {
 				description.push_back(input[0]);		// Append 1 char from index 0 of input to description
 				Token* newToken = new Token(TokenType::UNDEFINED, description, lineNum);
@@ -90,7 +121,6 @@ void Lexer::Run(std::string& input) {
 				lineNum++;
 			}
 			input.erase(0, 1);					// Erase 1 char from index 0 of input
-			//FIXME get line num right
 		}
 		// Update `input` by removing characters read to create Token
 		//    remove maxRead characters from input

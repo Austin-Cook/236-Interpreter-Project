@@ -39,6 +39,7 @@ int main(int argc, char** argv) {
 		fileString.push_back(textFile.get());
 //		std::cout << "fileString: " << fileString << std::endl;		// Debug
 	}
+	fileString.push_back(EOF);	//FIXME this adds EOF to the end of my string but this might not be the right approach
 
 	// Pass input to lexar and run it --------------------------------------------------
     Lexer* lexer = new Lexer();
