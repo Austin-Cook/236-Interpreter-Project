@@ -28,7 +28,8 @@ public:
 			index++;
 			S2(input);
 		} else if(input[index] == EOF) {
-			Serr();
+			//Set the token type to undefined
+			this->type = TokenType::UNDEFINED;
 		} else {
 			inputRead++;
 			index++;
@@ -36,11 +37,11 @@ public:
 		}
 	}
 
-	void S2(const std::string& input) {		//FIXME not const to be able to erase the second apostrophe
+	void S2(const std::string& input) {
 		if (input[index] == '\'') {
 			inputRead++;
 			index++;
-			S1(input);	//FIXME The problem is that the ' char is not being erased and it keeps the index the index the same so the second ' is being read in twice
+			S1(input);
 		}
 	}
 };

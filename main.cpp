@@ -32,7 +32,7 @@ int main(int argc, char** argv) {
 	}
 
 	/* Fill fileString with chars from text
-	 * This does not read in EOF
+	 * This does not read in EOF - actually it does (look at last line)
 	 */
 	while(textFile.peek() != EOF) {
 //		std::cout << "peek(): " << textFile.peek() << std::endl;	// Debug

@@ -16,6 +16,9 @@
 #include "IdAutomaton.h"
 #include "StringAutomaton.h"
 #include "LineCommentAutomaton.h"
+#include "BlockCommentAutomaton.h"
+//fIXME ad undefined right here!!!
+#include "EOFAutomaton.h"
 
 #include <cctype>
 
@@ -43,10 +46,12 @@ void Lexer::CreateAutomata() {
 	automata.push_back(new RulesAutomaton());
 	automata.push_back(new QueriesAutomaton());
 	automata.push_back(new IdAutomaton);
-	automata.push_back(new StringAutomaton);		//FIXME
+	automata.push_back(new StringAutomaton);
 	automata.push_back(new LineCommentAutomaton);
+	automata.push_back(new BlockCommentAutomaton);
+	//TODO add Undefined automaton here
+	automata.push_back(new EOFAutomaton);
 
-	// TODO: Add the other needed automata here
 }
 
 void Lexer::Run(std::string& input) {
@@ -106,9 +111,9 @@ void Lexer::Run(std::string& input) {
 
 			Token* newToken = maxAutomaton->CreateToken(description, lineNum);
 			tokens.push_back(newToken);
-			lineNum += maxAutomaton->NewLinesRead();	//FIXME make sure I should increment line after creating token
+			lineNum += maxAutomaton->NewLinesRead();
 		}
-		// UNDEFINED of whitespace
+		// UNDEFINED
 		else {
 			maxRead = 1;
 			std::string description = "";
