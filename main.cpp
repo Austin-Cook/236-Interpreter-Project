@@ -19,7 +19,7 @@ int main(int argc, char** argv) {
 //		}
 
 	// Verify num arguments
-	if(argc != 3) {											// Should be 3 args (0) C:rest_of_path.exe (1) ./main (2) text_file_name.txt
+	if(argc != 2) {											// Should be 3 args (0) C:rest_of_path.exe (1) ./main (2) text_file_name.txt
 		std::cerr << "Invalid number of arguments";
 	}
 
