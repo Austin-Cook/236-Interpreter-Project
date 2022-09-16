@@ -31,6 +31,9 @@ public:
 			//Set the token type to undefined
 			this->type = TokenType::UNDEFINED;
 		} else {
+			if(input[index] == '\n') {
+				this->newLines += 1;
+			}
 			inputRead++;
 			index++;
 			S1(input);

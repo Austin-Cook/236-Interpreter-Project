@@ -35,7 +35,7 @@ int main(int argc, char** argv) {
 	 * This does not read in EOF - actually it does (look at last line)
 	 */
 	while(textFile.peek() != EOF) {
-//		std::cout << "peek(): " << textFile.peek() << std::endl;	// Debug
+		std::cout << "peek(): " << textFile.peek() << std::endl;	// Debug
 		fileString.push_back(textFile.get());
 //		std::cout << "fileString: " << fileString << std::endl;		// Debug
 	}

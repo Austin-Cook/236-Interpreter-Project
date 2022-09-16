@@ -41,6 +41,9 @@ public:
 			index++;
 			S3(input);
 		} else {
+			if(input[index] == '\n') {
+				this->newLines += 1;
+			}
 			inputRead++;
 			index++;
 			S2(input);
