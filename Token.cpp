@@ -64,6 +64,8 @@ std::string Token::TokenTypeToString(TokenType type) {
 		case TokenType::EOF_TOKEN:
 			return "EOF";
 			break;        //FIXME make sure EOF is correct
+		default:
+			return "Error, end of switch statement in Token.cpp reached";
 	}
 }
 
