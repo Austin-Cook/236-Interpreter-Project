@@ -34,8 +34,9 @@ private:
 
 public:
     Token(TokenType type, std::string description, int line);
+	virtual ~Token() {}
 	void toString();
-	std::string TokenTypeToString(TokenType type);		//FIXME test to see if this works
+	std::string TokenTypeToString(TokenType type);
 };
 
 #endif // TOKEN_H

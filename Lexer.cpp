@@ -46,7 +46,6 @@ void Lexer::CreateAutomata() {
     automata.push_back(new ColonDashAutomaton());
 	automata.push_back(new MultiplyAutomaton());
 	automata.push_back(new AddAutomaton());
-
 	automata.push_back(new SchemesAutomaton());
 	automata.push_back(new FactsAutomaton());
 	automata.push_back(new RulesAutomaton());
@@ -56,7 +55,6 @@ void Lexer::CreateAutomata() {
 	automata.push_back(new LineCommentAutomaton);
 	automata.push_back(new BlockCommentAutomaton);
 	automata.push_back(new EOFAutomaton);
-
 }
 
 void Lexer::Run(std::string& input) {
