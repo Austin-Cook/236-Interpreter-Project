@@ -26,14 +26,14 @@ Lexer::Lexer() {
 }
 
 Lexer::~Lexer() {
-    for(int i = 0; i < (int)automata.size(); ++i) {
-		delete automata[i];
+    for(auto each : automata) {
+		delete each;
 	}
 	automata.clear();
-	for(int i = 0; i < (int)tokens.size(); ++i) {
-		delete automata[i];
+	for(auto each : tokens) {
+		delete each;
 	}
-	automata.clear();
+	tokens.clear();
 }
 
 void Lexer::CreateAutomata() {
