@@ -17,7 +17,6 @@
 #include "StringAutomaton.h"
 #include "LineCommentAutomaton.h"
 #include "BlockCommentAutomaton.h"
-//fIXME ad undefined right here!!!
 #include "EOFAutomaton.h"
 
 #include <cctype>
@@ -27,7 +26,14 @@ Lexer::Lexer() {
 }
 
 Lexer::~Lexer() {
-    // TODO: need to clean up the memory in `automata` and `tokens`
+    for(int i = 0; i < (int)automata.size(); ++i) {
+		delete automata[i];
+	}
+	automata.clear();
+	for(int i = 0; i < (int)tokens.size(); ++i) {
+		delete automata[i];
+	}
+	automata.clear();
 }
 
 void Lexer::CreateAutomata() {
@@ -49,31 +55,19 @@ void Lexer::CreateAutomata() {
 	automata.push_back(new StringAutomaton);
 	automata.push_back(new LineCommentAutomaton);
 	automata.push_back(new BlockCommentAutomaton);
-	//TODO add Undefined automaton here
 	automata.push_back(new EOFAutomaton);
 
 }
 
 void Lexer::Run(std::string& input) {
 	lineNum = 1;
-    // While there are more characters to tokenize
-    //loop while input.size() > 0 {
-    //    set maxRead to 0
-    //    set maxAutomaton to the first automaton in automata
 
+	// Runs the lexer with the Parallel and Max approach
 	while(input.size() > 0) {
 		int maxRead = 0;
 		Automaton* maxAutomaton = automata[0];
 
-		// Here is the "Parallel" part of the algorithm
-		//   Each automaton runs with the same input
-		//    foreach automaton in automata {
-		//        inputRead = automaton.Start(input)
-		//        if (inputRead > maxRead) {
-		//            set maxRead to inputRead
-		//            set maxAutomaton to automaton
-		//        }
-		//    }
+		// "Parallel" part of the algorithm
 		for (int i = 0; i < (int)automata.size(); i++) {
 			int inputRead = automata[i]->Start(input);
 			if(inputRead > maxRead) {
@@ -81,20 +75,8 @@ void Lexer::Run(std::string& input) {
 				maxAutomaton = automata[i];
 			}
 		}
+
 		// Here is the "Max" part of the algorithm
-		//    if maxRead > 0 {
-		//        set newToken to maxAutomaton.CreateToken(...)
-		//            increment lineNumber by maxAutomaton.NewLinesRead()
-		//            add newToken to collection of all tokens
-		//    }
-		// No automaton accepted input
-		// Create single character undefined token
-		//    else {
-		//        set maxRead to 1
-		//            set newToken to a  new undefined Token
-		//            (with first character of input)
-		//            add newToken to collection of all tokens
-		//    }
 		if(maxRead > 0) {
 			// Get string to add as "description" of token
 			std::string description = "";				//FIXME do I remove from input each time?
@@ -102,16 +84,15 @@ void Lexer::Run(std::string& input) {
 				description.push_back(input[0]);		// Append 1 char from index 0 of input to description
 				input.erase(0, 1);				// Erase 1 char from index 0 of input
 			}
-
 			Token* newToken = maxAutomaton->CreateToken(description, lineNum);
 			tokens.push_back(newToken);
 			lineNum += maxAutomaton->NewLinesRead();
 		}
-		// UNDEFINED
+		// UNDEFINED Chars
 		else {
 			maxRead = 1;
 			std::string description = "";
-			if(input[0] == '\n') {			//FIXME '\n' here?
+			if(input[0] == '\n') {
 				lineNum++;
 			} else if(!isspace(input[0])) {
 				description.push_back(input[0]);		// Append 1 char from index 0 of input to description
@@ -120,18 +101,13 @@ void Lexer::Run(std::string& input) {
 			}
 			input.erase(0, 1);					// Erase 1 char from index 0 of input
 		}
-		// Update `input` by removing characters read to create Token
-		//    remove maxRead characters from input
-		//}
-		//add end of file token to all tokens
-		//*/
+		//Not included - add end of file token to all tokens - EOF added to end of input string in main before passing it on here
 	}
 }
 
 void Lexer::printTokens() {
-	for(int i = 0; i < (int)tokens.size(); ++i) {		//FIXME does casting to int fix error?
+	for(int i = 0; i < (int)tokens.size(); ++i) {
 		tokens[i]->toString();
 	}
 	std::cout << "Total Tokens = " << tokens.size() << std::endl;
-	//FIXME here is where I need to add that last line
 }

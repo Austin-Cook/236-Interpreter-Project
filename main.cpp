@@ -5,19 +5,7 @@
 int main(int argc, char** argv) {
 	std::string fileString = "";
 
-	//Test code for Token
-//	Token myComma(TokenType::COMMA, "This is a comma", 5);
-//	Token myAdd(TokenType::ADD, "+", 7);
-//	myComma.toString();
-//	myAdd.toString();
-
 	// Prep fileString ------------------------------------------------------------------
-	// Prints Argc and Argv values
-//	std::cout << "argc: " << argc << std::endl;		// Debug
-//		for(int i = 0; i < argc; i++) {
-//			std::cout << i << ": " << argv[i] << std::endl;
-//		}
-
 	// Verify num arguments
 	if(argc != 2) {											// Should be 3 args (0) C:rest_of_path.exe (1) ./main (2) text_file_name.txt
 		std::cerr << "Invalid number of arguments";
@@ -25,7 +13,6 @@ int main(int argc, char** argv) {
 
 	// Open file
 	std::string fileName = argv[1];	//FIXME to run on Clion, this must be argv[2], otherwise argv[1]
-//	std::cout << "fileName being read in: " << fileName << std::endl;		// Debug
 	std::ifstream textFile(fileName);
 	if(textFile.fail()) {
 		std::cerr << "Failed";
@@ -34,19 +21,20 @@ int main(int argc, char** argv) {
 	/* Fill fileString with chars from text
 	 * This does not read in EOF - actually it does (look at last line)
 	 */
-	while(textFile.peek() != EOF) {
-//		std::cout << "peek(): " << textFile.peek() << std::endl;	// Debug
-		fileString.push_back(textFile.get());
-//		std::cout << "fileString: " << fileString << std::endl;		// Debug
-	}
-	fileString.push_back(EOF);	//FIXME this adds EOF to the end of my string but this might not be the right approach
 
-	// Pass input to lexar and run it --------------------------------------------------
+	if(!textFile.fail()) {	//Only if the file opened up
+		while(textFile.peek() != EOF) {
+			fileString.push_back(textFile.get());
+		}
+		fileString.push_back(EOF);	//FIXME this adds EOF to the end of my string but this might not be the right approach
+	}
+
+	// Pass input to lexer and run it --------------------------------------------------
     Lexer* lexer = new Lexer();
     lexer->Run(fileString);
 
 
-	// TODO print tokens from Lexar class in specified format
+	// Print tokens from Lexar class in specified format
 	lexer->printTokens();
 
 	// Dealocate memory
