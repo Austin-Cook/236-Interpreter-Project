@@ -37,6 +37,7 @@ public:
 	virtual ~Token() {}
 	void toString();
 	std::string TokenTypeToString(TokenType type);
+	std::string getTokenType();
 };
 
 #endif // TOKEN_H

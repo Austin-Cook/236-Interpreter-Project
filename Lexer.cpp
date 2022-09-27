@@ -77,7 +77,7 @@ void Lexer::Run(std::string& input) {
 		// Here is the "Max" part of the algorithm
 		if(maxRead > 0) {
 			// Get string to add as "description" of token
-			std::string description = "";				//FIXME do I remove from input each time?
+			std::string description = "";
 			for(int i = 0; i < maxRead; i++) {
 				description.push_back(input[0]);		// Append 1 char from index 0 of input to description
 				input.erase(0, 1);				// Erase 1 char from index 0 of input
@@ -108,4 +108,13 @@ void Lexer::printTokens() {
 		tokens[i]->toString();
 	}
 	std::cout << "Total Tokens = " << tokens.size() << std::endl;
+}
+
+void Lexer::removeCommentTokens() {
+	for(int i = tokens.size() - 1; i >= 0; i--) {
+		if(tokens[i]->getTokenType() == "COMMENT") {
+			delete tokens[i];
+			tokens.erase(tokens.begin() + i);
+		}
+	}
 }

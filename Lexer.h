@@ -17,6 +17,7 @@ public:
     ~Lexer();
     void Run(std::string& input);
 	void printTokens();
+	void removeCommentTokens();
 };
 
 #endif // LEXER_H
