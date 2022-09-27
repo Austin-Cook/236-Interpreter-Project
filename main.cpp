@@ -26,7 +26,7 @@ int main(int argc, char** argv) {
 		while(textFile.peek() != EOF) {
 			fileString.push_back(textFile.get());
 		}
-		fileString.push_back(EOF);	//FIXME this adds EOF to the end of my string but this might not be the right approach
+		fileString.push_back(EOF);
 	}
 
 	// Pass input to lexer and run it --------------------------------------------------
