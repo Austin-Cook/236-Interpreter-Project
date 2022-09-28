@@ -17,7 +17,9 @@ public:
     ~Lexer();
     void Run(std::string& input);
 	void printTokens();
-	void removeCommentTokens();
+	// Similar function in Parser class - Do not use this one
+	void RemoveCommentTokens();
+	std::vector<Token*> getTokenVector();
 };
 
 #endif // LEXER_H

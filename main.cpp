@@ -1,4 +1,5 @@
 #include "Lexer.h"
+#include "Parser.h"
 #include <iostream>
 #include <fstream>
 
@@ -19,9 +20,8 @@ int main(int argc, char** argv) {
 	}
 
 	/* Fill fileString with chars from text
-	 * This does not read in EOF - actually it does (look at last line)
+	 * This does not read in EOF - it pushes it on the end
 	 */
-
 	if(!textFile.fail()) {	//Only if the file opened up
 		while(textFile.peek() != EOF) {
 			fileString.push_back(textFile.get());
@@ -35,10 +35,14 @@ int main(int argc, char** argv) {
 
 
 	// Print tokens from Lexar class in specified format
-	lexer->printTokens();
+	//lexer->printTokens();
 
-	// For Project 2 - Delete Comments
-	lexer->removeCommentTokens();
+	// PROJECT 2 - Delete Comments (The Parser is set up to automatically ignore tokens, so this is not needed)
+	//lexer->RemoveCommentTokens();
+
+	// PROJECT 2 - run ParseDatalogProgram function with tokenVector
+	Parser parser(lexer->getTokenVector());
+	parser.ParseDatalogProgram();
 
 	// Dealocate memory
     delete lexer;

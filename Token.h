@@ -9,8 +9,8 @@ enum class TokenType {
 	Q_MARK,
 	LEFT_PAREN,
 	RIGHT_PAREN,
-	COLON,			// Previously here
-    COLON_DASH,		// Previously here
+	COLON,
+    COLON_DASH,
 	MULTIPLY,
 	ADD,
 	SCHEMES,
@@ -20,8 +20,8 @@ enum class TokenType {
 	ID,
 	STRING,
 	COMMENT,
-    UNDEFINED,		// Previously here
-	EOF_TOKEN		//FIXME watch the naming here!
+    UNDEFINED,
+	EOF_TOKEN
 };
 
 class Token
@@ -37,7 +37,8 @@ public:
 	virtual ~Token() {}
 	void toString();
 	std::string TokenTypeToString(TokenType type);
-	std::string getTokenType();
+	std::string getTokenTypeAsString();
+	TokenType getTokenType();
 };
 
 #endif // TOKEN_H

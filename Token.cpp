@@ -7,12 +7,11 @@ Token::Token(TokenType type, std::string description, int line) {
 	this->lineNumber = line;
 }
 
-//FIXME test if this works
 std::string Token::TokenTypeToString(TokenType type) {
 	switch(type) {
 		case TokenType::COMMA:
 			return "COMMA";
-			break;        //FIXME syntax good?
+			break;
 		case TokenType::PERIOD:
 			return "PERIOD";
 			break;
@@ -81,6 +80,10 @@ void Token::toString() {
 	}
 }
 
-std::string Token::getTokenType() {
+std::string Token::getTokenTypeAsString() {
 	return TokenTypeToString(this->type);
+}
+
+TokenType Token::getTokenType() {
+	return this->type;
 }

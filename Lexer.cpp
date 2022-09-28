@@ -110,11 +110,15 @@ void Lexer::printTokens() {
 	std::cout << "Total Tokens = " << tokens.size() << std::endl;
 }
 
-void Lexer::removeCommentTokens() {
+void Lexer::RemoveCommentTokens() {
 	for(int i = tokens.size() - 1; i >= 0; i--) {
-		if(tokens[i]->getTokenType() == "COMMENT") {
+		if(tokens[i]->getTokenTypeAsString() == "COMMENT") {
 			delete tokens[i];
 			tokens.erase(tokens.begin() + i);
 		}
 	}
+}
+
+std::vector<Token*> Lexer::getTokenVector() {
+	return this->tokens;
 }
