@@ -66,8 +66,8 @@ void Parser::Advance() {
 void Parser::ParseDatalogProgram() {
 	// Remove Comments Prior to Parsing
 	RemoveCommentTokens();
-
 //	PrintTokens();
+
 
 	std::vector<Token*>::iterator currentToken = tokens.begin();
 	//Datalog Production

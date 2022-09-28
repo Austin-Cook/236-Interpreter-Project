@@ -10,6 +10,13 @@
 
 class Rule {
 public:
+	Rule(Predicate* headPredicate, std::vector<Predicate*> bodyPredicates) {
+		this->headPredicate = headPredicate;
+		for(int i = 0; i < bodyPredicates.size(); i++) {
+			this->bodyPredicates.push_back(bodyPredicates.at(i));
+		}
+	}
+
 	std::string toString() {
 		std::string outputString = "";
 		outputString.append(headPredicate->toString()) + " :- ";

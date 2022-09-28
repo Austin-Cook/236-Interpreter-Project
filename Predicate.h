@@ -11,6 +11,13 @@
 
 class Predicate {
 public:
+	Predicate(std::string id, std::vector<Parameter*> parameterVector) {
+		this->id = id;
+		for(int i = 0; i < parameterVector.size(); i++) {
+			this->parameterVector.push_back(parameterVector.at(i));
+		}
+	}
+
 	std::string toString() {
 		std::string outputString = "";
 		outputString.append(id + "(");
