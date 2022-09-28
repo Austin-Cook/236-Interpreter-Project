@@ -42,7 +42,14 @@ int main(int argc, char** argv) {
 
 	// PROJECT 2 - run ParseDatalogProgram function with tokenVector
 	Parser parser(lexer->getTokenVector());
-	parser.ParseDatalogProgram();
+	try {
+		parser.ParseDatalogProgram();
+		std::cout << "Success!" << std::endl;
+	} catch(std::string error) {
+		std::cout << "Failure!" << std::endl;
+		std::cout << "  " << error << std::endl;
+	}
+
 
 	// Dealocate memory
     delete lexer;

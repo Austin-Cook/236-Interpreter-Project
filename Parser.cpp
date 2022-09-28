@@ -36,17 +36,12 @@ Parser::~Parser() {
 }
 
 void Parser::Match(TokenType expectedToken) {
-	try {
-		if(expectedToken == getCurrentToken()) {
-			Advance();
-		} else {
-			throw "ERROR - Expected: " + tokenToString[(int)expectedToken] + ", Actual: " + tokenToString[(int)getCurrentToken()];
-		}
-	} catch(std::string error) {
-		Advance();							//FIXME THIS PROBABLY SHOULDN'T BE HERE
-		std::cerr << error << std::endl;
+	if(expectedToken == getCurrentToken()) {
+		Advance();
+	} else {
+		//throw "(In Match) ERROR - Expected: " + tokenToString[(int)expectedToken] + ", Actual: " + tokenToString[(int)getCurrentToken()];
+		throw tokens[vectorIndex]->toStringObject();
 	}
-
 }
 
 TokenType Parser::getCurrentToken() {
@@ -59,7 +54,6 @@ TokenType Parser::getCurrentToken() {
 
 void Parser::Advance() {
 	if(vectorIndex < tokens.size()) {
-		//std::cout << "Index: " << vectorIndex << std::endl; //FIXME DELETEME
 		vectorIndex++;
 	} else {
 		std::cerr << "ERROR in Advance() - Attempted token is out of range of tokens vector";
@@ -95,19 +89,15 @@ void Parser::ParseDatalogProgram() {
 }
 
 void Parser::ParseScheme() {
-	try {
-		if(getCurrentToken() == TokenType::ID) {	// First (scheme -> ID)
-			Match(TokenType::ID);
-			Match(TokenType::LEFT_PAREN);
-			Match(TokenType::ID);
-			ParseIdList();
-			Match(TokenType::RIGHT_PAREN);
-		} else {
-			throw "Error in ParseScheme() - Expected: ID, Actual: " + tokenToString[(int)getCurrentToken()];
-		}
-	}
-	catch(std::string error) {
-		std::cerr << error << std::endl;
+	if(getCurrentToken() == TokenType::ID) {	// First (scheme -> ID)
+		Match(TokenType::ID);
+		Match(TokenType::LEFT_PAREN);
+		Match(TokenType::ID);
+		ParseIdList();
+		Match(TokenType::RIGHT_PAREN);
+	} else {
+		//throw "Error in ParseScheme() - Expected: ID, Actual: " + tokenToString[(int)getCurrentToken()];
+		throw tokens[vectorIndex]->toStringObject();
 	}
 }
 
@@ -139,16 +129,12 @@ void Parser::ParseRuleList() {
 }
 
 void Parser::ParseQuery() {
-	try {
-		if(getCurrentToken() == TokenType::ID) {	// First (query -> ID)
-			ParsePredicate();
-			Match(TokenType::Q_MARK);
-		} else {
-			throw "Error in ParseQuery() - Expected: ID, Actual: " + tokenToString[(int)getCurrentToken()];
-		}
-	}
-	catch(std::string error) {
-		std::cerr << error << std::endl;
+	if(getCurrentToken() == TokenType::ID) {	// First (query -> ID)
+		ParsePredicate();
+		Match(TokenType::Q_MARK);
+	} else {
+		//throw "Error in ParseQuery() - Expected: ID, Actual: " + tokenToString[(int)getCurrentToken()];
+		throw tokens[vectorIndex]->toStringObject();
 	}
 }
 
@@ -172,54 +158,42 @@ void Parser::ParseIdList() {
 }
 
 void Parser::ParseFact() {
-	try {
-		if(getCurrentToken() == TokenType::ID) {	// First (fact -> ID)
-			Match(TokenType::ID);
-			Match(TokenType::LEFT_PAREN);
-			Match(TokenType::STRING);
-			ParseStringList();
-			Match(TokenType::RIGHT_PAREN);
-			Match(TokenType::PERIOD);
-		} else {
-			throw "Error in ParseFact() - Expected: ID, Actual: " + tokenToString[(int)getCurrentToken()];
-		}
-	}
-	catch(std::string error) {
-		std::cerr << error << std::endl;
+	if(getCurrentToken() == TokenType::ID) {	// First (fact -> ID)
+		Match(TokenType::ID);
+		Match(TokenType::LEFT_PAREN);
+		Match(TokenType::STRING);
+		ParseStringList();
+		Match(TokenType::RIGHT_PAREN);
+		Match(TokenType::PERIOD);
+	} else {
+		//throw "Error in ParseFact() - Expected: ID, Actual: " + tokenToString[(int)getCurrentToken()];
+		throw tokens[vectorIndex]->toStringObject();
 	}
 }
 
 void Parser::ParseRule() {
-	try {
-		if(getCurrentToken() == TokenType::ID) {	// First (rule -> ID)
-			ParseHeadPredicate();
-			Match(TokenType::COLON_DASH);
-			ParsePredicate();
-			ParsePredicateList();
-			Match(TokenType::PERIOD);
-		} else {
-			throw "Error in ParseRule() - Expected: ID, Actual: " + tokenToString[(int)getCurrentToken()];
-		}
-	}
-	catch(std::string error) {
-		std::cerr << error << std::endl;
+	if(getCurrentToken() == TokenType::ID) {	// First (rule -> ID)
+		ParseHeadPredicate();
+		Match(TokenType::COLON_DASH);
+		ParsePredicate();
+		ParsePredicateList();
+		Match(TokenType::PERIOD);
+	} else {
+		//throw "Error in ParseRule() - Expected: ID, Actual: " + tokenToString[(int)getCurrentToken()];
+		throw tokens[vectorIndex]->toStringObject();
 	}
 }
 
 void Parser::ParsePredicate() {
-	try {
-		if(getCurrentToken() == TokenType::ID) {	// First (predicate -> ID)
-			Match(TokenType::ID);
-			Match(TokenType::LEFT_PAREN);
-			ParseParameter();
-			ParseParameterList();
-			Match(TokenType::RIGHT_PAREN);
-		} else {
-			throw "Error in ParsePredicate() - Expected: ID, Actual: " + tokenToString[(int)getCurrentToken()];
-		}
-	}
-	catch(std::string error) {
-		std::cerr << error << std::endl;
+	if(getCurrentToken() == TokenType::ID) {	// First (predicate -> ID)
+		Match(TokenType::ID);
+		Match(TokenType::LEFT_PAREN);
+		ParseParameter();
+		ParseParameterList();
+		Match(TokenType::RIGHT_PAREN);
+	} else {
+		//throw "Error in ParsePredicate() - Expected: ID, Actual: " + tokenToString[(int)getCurrentToken()];
+		throw tokens[vectorIndex]->toStringObject();
 	}
 }
 
@@ -234,19 +208,15 @@ void Parser::ParseStringList() {
 }
 
 void Parser::ParseHeadPredicate() {
-	try {
-		if(getCurrentToken() == TokenType::ID) {	// First (headPredicate -> ID)
-			Match(TokenType::ID);
-			Match(TokenType::LEFT_PAREN);
-			Match(TokenType::ID);
-			ParseIdList();
-			Match(TokenType::RIGHT_PAREN);
-		} else {
-			throw "Error in ParseHeadPredicate() - Expected: ID, Actual: " + tokenToString[(int)getCurrentToken()];
-		}
-	}
-	catch(std::string error) {
-		std::cerr << error << std::endl;
+	if(getCurrentToken() == TokenType::ID) {	// First (headPredicate -> ID)
+		Match(TokenType::ID);
+		Match(TokenType::LEFT_PAREN);
+		Match(TokenType::ID);
+		ParseIdList();
+		Match(TokenType::RIGHT_PAREN);
+	} else {
+		//throw "Error in ParseHeadPredicate() - Expected: ID, Actual: " + tokenToString[(int)getCurrentToken()];
+		throw tokens[vectorIndex]->toStringObject();
 	}
 }
 
@@ -261,16 +231,13 @@ void Parser::ParsePredicateList() {
 }
 
 void Parser::ParseParameter() {
-	try {
-		if(getCurrentToken() == TokenType::STRING) {	// First (parameter -> STRING = {STRING})
-			Match(TokenType::STRING);
-		} else if(getCurrentToken() == TokenType::ID) {	// First (parameter -> ID = {ID})
-			Match(TokenType::ID);
-		} else {
-			throw "Error in ParseParameter() - Expected: STRING or ID, Actual: " + tokenToString[(int)getCurrentToken()];
-		}
-	} catch(std::string error) {
-		std::cerr << error << std::endl;
+	if(getCurrentToken() == TokenType::STRING) {	// First (parameter -> STRING = {STRING})
+		Match(TokenType::STRING);
+	} else if(getCurrentToken() == TokenType::ID) {	// First (parameter -> ID = {ID})
+		Match(TokenType::ID);
+	} else {
+		//throw "Error in ParseParameter() - Expected: STRING or ID, Actual: " + tokenToString[(int)getCurrentToken()];
+		throw tokens[vectorIndex]->toStringObject();
 	}
 }
 

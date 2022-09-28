@@ -80,6 +80,18 @@ void Token::toString() {
 	}
 }
 
+std::string Token::toStringObject() {
+	// Format: (COLON_DASH,":-",6)
+	//EOF token should have empty description
+	if(this->type == TokenType::EOF_TOKEN) {
+		return "(" + TokenTypeToString(this->type) + ",\"" + "" + "\"," + std::to_string(this->lineNumber) + ")" + "\n";
+	}
+		//For all tokens not EOF
+	else {
+		return "(" + TokenTypeToString(this->type) + ",\"" + this->description + "\"," + std::to_string(this->lineNumber) + ")" + "\n";
+	}
+}
+
 std::string Token::getTokenTypeAsString() {
 	return TokenTypeToString(this->type);
 }
