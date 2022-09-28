@@ -35,12 +35,13 @@ public:
 	void ParseParameterList();
 
 	void RemoveCommentTokens();
+	void PrintDatalog();
 	// Function for testing
 	void PrintTokens();
 private:
 	std::vector<Token*> tokens;
 	int vectorIndex;
-	DatalogProgram datalog();
+	DatalogProgram datalog;
 };
 
 

@@ -260,6 +260,10 @@ void Parser::RemoveCommentTokens() {
 	}
 }
 
+void Parser::PrintDatalog() {
+	std::cout << datalog.toString();
+}
+
 void Parser::PrintTokens() {
 	for(int i = 0; i < (int)tokens.size(); ++i) {
 		tokens[i]->toString();

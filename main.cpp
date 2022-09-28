@@ -45,6 +45,7 @@ int main(int argc, char** argv) {
 	try {
 		parser.ParseDatalogProgram();
 		std::cout << "Success!" << std::endl;
+		parser.PrintDatalog();
 	} catch(std::string error) {
 		std::cout << "Failure!" << std::endl;
 		std::cout << "  " << error << std::endl;
