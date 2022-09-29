@@ -45,16 +45,12 @@ void Parser::Match(TokenType expectedToken) {
 }
 
 TokenType Parser::GetCurrentToken() {
-	if(vectorIndex < (int)tokens.size()) {
-		return (tokens.at(vectorIndex)->getTokenType());
-	}
+	return (tokens.at(vectorIndex)->getTokenType());
 }
 
 // Returns the description of the current token
 std::string Parser::GetCTDescription() {
-	if(vectorIndex < (int)tokens.size()) {
-		return (tokens.at(vectorIndex)->getTokenDescription());	//FIXME change to description value
-	}
+	return (tokens.at(vectorIndex)->getTokenDescription());	//FIXME change to description value
 }
 
 void Parser::Advance() {
