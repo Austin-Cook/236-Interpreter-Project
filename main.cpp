@@ -48,7 +48,7 @@ int main(int argc, char** argv) {
 		parser.PrintDatalog();
 	} catch(std::string error) {
 		std::cout << "Failure!" << std::endl;
-		std::cout << "  " << error << std::endl;
+		std::cout << "  " << error;
 	}
 
 	// Dealocate memory
