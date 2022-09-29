@@ -26,7 +26,7 @@ Lexer::Lexer() {
 }
 
 Lexer::~Lexer() {
-    for(auto each : automata) {
+	for(auto each : automata) {
 		delete each;
 	}
 	automata.clear();

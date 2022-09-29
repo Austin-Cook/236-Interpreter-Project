@@ -286,7 +286,7 @@ void Parser::ParseParameterList() {
 void Parser::RemoveCommentTokens() {
 	for(int i = tokens.size() - 1; i >= 0; i--) {
 		if(tokens[i]->getTokenTypeAsString() == "COMMENT") {
-			delete tokens[i];
+			//delete tokens[i];
 			tokens.erase(tokens.begin() + i);
 		}
 	}
