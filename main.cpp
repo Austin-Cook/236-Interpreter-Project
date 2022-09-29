@@ -53,7 +53,7 @@ int main(int argc, char** argv) {
 
 
 	// Dealocate memory
-    delete lexer;
+//    delete lexer;
 
     return 0;
 }
