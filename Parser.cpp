@@ -45,24 +45,20 @@ void Parser::Match(TokenType expectedToken) {
 }
 
 TokenType Parser::GetCurrentToken() {
-	if(vectorIndex < tokens.size()) {
+	if(vectorIndex < (int)tokens.size()) {
 		return (tokens.at(vectorIndex)->getTokenType());
-	} else {
-		std::cerr << "ERROR in GetCurrentToken() - Attempted token is out of range of tokens vector";
 	}
 }
 
 // Returns the description of the current token
 std::string Parser::GetCTDescription() {
-	if(vectorIndex < tokens.size()) {
+	if(vectorIndex < (int)tokens.size()) {
 		return (tokens.at(vectorIndex)->getTokenDescription());	//FIXME change to description value
-	} else {
-		std::cerr << "ERROR in GetCTDescription() - Attempted token is out of range of tokens vector";
 	}
 }
 
 void Parser::Advance() {
-	if(vectorIndex < tokens.size()) {
+	if(vectorIndex < (int)tokens.size()) {
 		vectorIndex++;
 	} else {
 		std::cerr << "ERROR in Advance() - Attempted token is out of range of tokens vector";
@@ -77,8 +73,6 @@ void Parser::ParseDatalogProgram() {
 	RemoveCommentTokens();
 //	PrintTokens();
 
-
-	std::vector<Token*>::iterator currentToken = tokens.begin();
 	//Datalog Production
 	Match(TokenType::SCHEMES);
 	Match(TokenType::COLON);

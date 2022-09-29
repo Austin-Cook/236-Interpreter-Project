@@ -12,7 +12,7 @@ class Rule {
 public:
 	Rule(Predicate* headPredicate, std::vector<Predicate*> bodyPredicates) {
 		this->headPredicate = headPredicate;
-		for(int i = 0; i < bodyPredicates.size(); i++) {
+		for(int i = 0; i < (int)bodyPredicates.size(); i++) {
 			this->bodyPredicates.push_back(bodyPredicates.at(i));
 		}
 	}
@@ -20,9 +20,9 @@ public:
 	std::string toString() {
 		std::string outputString = "";
 		outputString.append(headPredicate->toString() + " :- ");
-		for(int i = 0; i < bodyPredicates.size(); ++i) {
+		for(int i = 0; i < (int)bodyPredicates.size(); ++i) {
 			outputString.append(bodyPredicates.at(i)->toString());
-			if(i < bodyPredicates.size() - 1) {
+			if(i < (int)bodyPredicates.size() - 1) {
 				outputString.append(",");
 			}
 		}

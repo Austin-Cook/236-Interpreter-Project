@@ -41,22 +41,22 @@ public:
 		// Schemes
 		std::string outputString = "";
 		outputString.append("Schemes(" + std::to_string(schemeVector.size()) + "):\n");
-		for(int i = 0; i < schemeVector.size(); ++i) {
+		for(int i = 0; i < (int)schemeVector.size(); ++i) {
 			outputString.append("  " + schemeVector.at(i)->toString() + "\n");
 		}
 		// Facts
 		outputString.append("Facts(" + std::to_string(factVector.size()) + "):\n");
-		for(int i = 0; i < factVector.size(); ++i) {
+		for(int i = 0; i < (int)factVector.size(); ++i) {
 			outputString.append("  " + factVector.at(i)->toString() + "." + "\n");
 		}
 		// Rules
 		outputString.append("Rules(" + std::to_string(ruleVector.size()) + "):\n");
-		for(int i = 0; i < ruleVector.size(); ++i) {
+		for(int i = 0; i < (int)ruleVector.size(); ++i) {
 			outputString.append("  " + ruleVector.at(i)->toString() + "\n");
 		}
 		// Queries
 		outputString.append("Queries(" + std::to_string(queryVector.size()) + "):\n");
-		for(int i = 0; i < queryVector.size(); ++i) {
+		for(int i = 0; i < (int)queryVector.size(); ++i) {
 			outputString.append("  " + queryVector.at(i)->toString() + "?" + "\n");
 		}
 		// Domain
