@@ -29,7 +29,7 @@ static std::string tokenToString[] = {
 Parser::Parser(std::vector<Token *> tokens) {
 	this->tokens = tokens;
 	this->vectorIndex = 0;
-	this->tempID = "";	//FIXME DID this work?
+	this->tempID = "";
 }
 
 Parser::~Parser() {
@@ -101,7 +101,6 @@ void Parser::ParseScheme() {
 
 		datalog.addScheme(tempID, tempParameterVector);
 	} else {
-		//throw "Error in ParseScheme() - Expected: ID, Actual: " + tokenToString[(int)GetCurrentToken()];
 		throw tokens[vectorIndex]->toStringObject();
 	}
 }
@@ -111,7 +110,7 @@ void Parser::ParseSchemeList() {
 			ParseScheme();
 			ParseSchemeList();
 		} else {
-			// lambda - do nothing FIXME this could check for a follow set?
+			// lambda - do nothing
 		}
 }
 
@@ -120,7 +119,7 @@ void Parser::ParseFactList() {
 		ParseFact();
 		ParseFactList();
 	} else {
-		// lambda - do nothing FIXME this could check for a follow set?
+		// lambda - do nothing
 	}
 }
 
@@ -129,7 +128,7 @@ void Parser::ParseRuleList() {
 		ParseRule();
 		ParseRuleList();
 	} else {
-		// lambda - do nothing FIXME this could check for a follow set?
+		// lambda - do nothing
 	}
 }
 
@@ -140,7 +139,6 @@ void Parser::ParseQuery() {
 		datalog.addQuery(tempBodyPredicatesVector.at(0));
 		Match(TokenType::Q_MARK);
 	} else {
-		//throw "Error in ParseQuery() - Expected: ID, Actual: " + tokenToString[(int)GetCurrentToken()];
 		throw tokens[vectorIndex]->toStringObject();
 	}
 }
@@ -150,7 +148,7 @@ void Parser::ParseQueryList() {
 		ParseQuery();
 		ParseQueryList();
 	} else {
-		// lambda - do nothing FIXME this could check for a follow set?
+		// lambda - do nothing
 	}
 }
 
@@ -161,7 +159,7 @@ void Parser::ParseIdList() {
 		Match(TokenType::ID);
 		ParseIdList();
 	} else {
-		// lambda - do nothing FIXME this could check for a follow set?
+		// lambda - do nothing
 	}
 }
 
@@ -180,7 +178,6 @@ void Parser::ParseFact() {
 
 		datalog.addFact(tempID, tempParameterVector);
 	} else {
-		//throw "Error in ParseFact() - Expected: ID, Actual: " + tokenToString[(int)GetCurrentToken()];
 		throw tokens[vectorIndex]->toStringObject();
 	}
 }
@@ -194,11 +191,8 @@ void Parser::ParseRule() {
 		ParsePredicateList();
 		Match(TokenType::PERIOD);
 
-		//std::cout << "Look here: " << std::endl;	//FIXME DELETEME
-		//headPredicate->toString();					//FIXME DELETEME
 		datalog.addRule(tempBodyPredicatesVector);
 	} else {
-		//throw "Error in ParseRule() - Expected: ID, Actual: " + tokenToString[(int)GetCurrentToken()];
 		throw tokens[vectorIndex]->toStringObject();
 	}
 }
@@ -215,7 +209,6 @@ void Parser::ParsePredicate() {
 
 		tempBodyPredicatesVector.push_back(new Predicate(tempID, tempParameterVector));
 	} else {
-		//throw "Error in ParsePredicate() - Expected: ID, Actual: " + tokenToString[(int)GetCurrentToken()];
 		throw tokens[vectorIndex]->toStringObject();
 	}
 }
@@ -228,7 +221,7 @@ void Parser::ParseStringList() {
 		Match(TokenType::STRING);
 		ParseStringList();
 	} else {
-		// lambda - do nothing FIXME this could check for a follow set?
+		// lambda - do nothing
 	}
 }
 
@@ -242,11 +235,8 @@ void Parser::ParseHeadPredicate() {
 		ParseIdList();
 		Match(TokenType::RIGHT_PAREN);
 
-		tempBodyPredicatesVector.push_back(new Predicate(tempID, tempParameterVector));	//FIXME this is new
-		//headPredicate = new Predicate(tempID, tempParameterVector); FIXME THIS SWAPPED
-
+		tempBodyPredicatesVector.push_back(new Predicate(tempID, tempParameterVector));
 	} else {
-		//throw "Error in ParseHeadPredicate() - Expected: ID, Actual: " + tokenToString[(int)GetCurrentToken()];
 		throw tokens[vectorIndex]->toStringObject();
 	}
 }
@@ -257,7 +247,7 @@ void Parser::ParsePredicateList() {
 		ParsePredicate();
 		ParsePredicateList();
 	} else {
-		// lambda - do nothing FIXME this could check for a follow set?
+		// lambda - do nothing
 	}
 }
 
@@ -269,7 +259,6 @@ void Parser::ParseParameter() {
 		tempParameterVector.push_back(new Parameter(GetCTDescription()));
 		Match(TokenType::ID);
 	} else {
-		//throw "Error in ParseParameter() - Expected: STRING or ID, Actual: " + tokenToString[(int)GetCurrentToken()];
 		throw tokens[vectorIndex]->toStringObject();
 	}
 }
@@ -280,7 +269,7 @@ void Parser::ParseParameterList() {
 		ParseParameter();
 		ParseParameterList();
 	} else {
-		// lambda - do nothing FIXME this could check for a follow set?
+		// lambda - do nothing
 	}
 }
 
