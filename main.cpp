@@ -51,9 +51,8 @@ int main(int argc, char** argv) {
 		std::cout << "  " << error << std::endl;
 	}
 
-
 	// Dealocate memory
-//    delete lexer;
+    //delete lexer;
 
     return 0;
 }

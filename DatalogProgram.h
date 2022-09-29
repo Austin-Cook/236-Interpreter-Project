@@ -28,8 +28,14 @@ public:
 		queryVector.push_back(predicate);
 	}
 
-	void addRule(Predicate* headPredicate, std::vector<Predicate*> bodyPredicates) {
-		Rule* ruleToAdd = new Rule(headPredicate, bodyPredicates);
+	// bodyPredicates vector contains the headPredicate at index 0 and bodyPredicates from index 1 and on
+	void addRule(std::vector<Predicate*> bodyPredicates) {
+		std::vector<Predicate*> tempPredicates;
+		// Copy all but 1st index to tempPredicates
+		for(int i = 1; i < (int)bodyPredicates.size(); i++) {
+			tempPredicates.push_back(bodyPredicates.at(i));
+		}
+		Rule* ruleToAdd = new Rule(bodyPredicates.at(0), tempPredicates); //FIXME remove first bodyPRedicate from 2nd param
 		ruleVector.push_back(ruleToAdd);
 	}
 

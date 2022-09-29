@@ -193,9 +193,9 @@ void Parser::ParseRule() {
 		ParsePredicateList();
 		Match(TokenType::PERIOD);
 
-		std::cout << "Look here: " << std::endl;	//FIXME DELETEME
-		headPredicate->toString();					//FIXME DELETEME
-		datalog.addRule(headPredicate, tempBodyPredicatesVector);
+		//std::cout << "Look here: " << std::endl;	//FIXME DELETEME
+		//headPredicate->toString();					//FIXME DELETEME
+		datalog.addRule(tempBodyPredicatesVector);
 	} else {
 		//throw "Error in ParseRule() - Expected: ID, Actual: " + tokenToString[(int)GetCurrentToken()];
 		throw tokens[vectorIndex]->toStringObject();
@@ -241,7 +241,9 @@ void Parser::ParseHeadPredicate() {
 		ParseIdList();
 		Match(TokenType::RIGHT_PAREN);
 
-		headPredicate = new Predicate(tempID, tempParameterVector);
+		tempBodyPredicatesVector.push_back(new Predicate(tempID, tempParameterVector));	//FIXME this is new
+		//headPredicate = new Predicate(tempID, tempParameterVector); FIXME THIS SWAPPED
+
 	} else {
 		//throw "Error in ParseHeadPredicate() - Expected: ID, Actual: " + tokenToString[(int)GetCurrentToken()];
 		throw tokens[vectorIndex]->toStringObject();

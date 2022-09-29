@@ -49,7 +49,6 @@ private:
 	// Temp values to push to datalog to create object
 	std::string tempID;
 	std::vector<Parameter*> tempParameterVector;
-	Predicate* headPredicate;
 	std::vector<Predicate*> tempBodyPredicatesVector;
 };
 
