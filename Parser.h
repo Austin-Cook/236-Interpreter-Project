@@ -14,7 +14,8 @@ public:
 	Parser(std::vector<Token*> tokens);
 	~Parser();
 	void Match(TokenType expectedToken);
-	TokenType getCurrentToken();
+	TokenType GetCurrentToken();
+	std::string GetCTDescription();
 	void Advance();
 	void ParseDatalogProgram();
 	// Recursive Parse Functions
@@ -36,12 +37,20 @@ public:
 
 	void RemoveCommentTokens();
 	void PrintDatalog();
+	void ResetTempValues();
+	void ResetPredicateValues();
 	// Function for testing
 	void PrintTokens();
 private:
 	std::vector<Token*> tokens;
 	int vectorIndex;
 	DatalogProgram datalog;
+
+	// Temp values to push to datalog to create object
+	std::string tempID;
+	std::vector<Parameter*> tempParameterVector;
+	Predicate* headPredicate;
+	std::vector<Predicate*> tempBodyPredicatesVector;
 };
 
 

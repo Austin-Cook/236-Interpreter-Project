@@ -9,8 +9,12 @@
 
 class Parameter {
 public:
+	Parameter(std::string p) {
+		this->p = p;
+	}
+
 	std::string toString() {
-		return "\'" + p + "\'";
+		return p;
 	}
 
 private:

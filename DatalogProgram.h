@@ -7,9 +7,10 @@
 
 #include "Predicate.h"
 #include "Rule.h"
+#include "Parameter.h"
 #include <string>
 #include <vector>
-#include <list>
+#include <set>
 
 class DatalogProgram {
 public:
@@ -23,9 +24,8 @@ public:
 		factVector.push_back(predicateToAdd);
 	}
 
-	void addQuery(std::string id, std::vector<Parameter*> parameterVector) {
-		Predicate* predicateToAdd = new Predicate(id, parameterVector);
-		queryVector.push_back(predicateToAdd);
+	void addQuery(Predicate* predicate) {
+		queryVector.push_back(predicate);
 	}
 
 	void addRule(Predicate* headPredicate, std::vector<Predicate*> bodyPredicates) {
@@ -33,8 +33,8 @@ public:
 		ruleVector.push_back(ruleToAdd);
 	}
 
-	void addDomain(std::string* domain) {
-		domainList.push_back(domain);
+	void addDomain(std::string domain) {
+		domainSet.insert(domain);
 	}
 
 	std::string toString() {
@@ -42,27 +42,27 @@ public:
 		std::string outputString = "";
 		outputString.append("Schemes(" + std::to_string(schemeVector.size()) + "):\n");
 		for(int i = 0; i < schemeVector.size(); ++i) {
-			outputString.append("  " + schemeVector.at(i)->toString());
+			outputString.append("  " + schemeVector.at(i)->toString() + "\n");
 		}
 		// Facts
 		outputString.append("Facts(" + std::to_string(factVector.size()) + "):\n");
 		for(int i = 0; i < factVector.size(); ++i) {
-			outputString.append("  " + factVector.at(i)->toString() + ".");
+			outputString.append("  " + factVector.at(i)->toString() + "." + "\n");
 		}
 		// Rules
 		outputString.append("Rules(" + std::to_string(ruleVector.size()) + "):\n");
 		for(int i = 0; i < ruleVector.size(); ++i) {
-			outputString.append("  " + ruleVector.at(i)->toString());
+			outputString.append("  " + ruleVector.at(i)->toString() + "\n");
 		}
 		// Queries
 		outputString.append("Queries(" + std::to_string(queryVector.size()) + "):\n");
 		for(int i = 0; i < queryVector.size(); ++i) {
-			outputString.append("  " + queryVector.at(i)->toString() + "?");
+			outputString.append("  " + queryVector.at(i)->toString() + "?" + "\n");
 		}
 		// Domain
-		outputString.append("Domain(" + std::to_string(domainList.size()) + "):\n");
-		for(auto each : domainList) {
-			outputString.append("  \'" + *(each) + "\'");
+		outputString.append("Domain(" + std::to_string(domainSet.size()) + "):\n");
+		for(auto each : domainSet) {
+			outputString.append(each + "\n");
 		}
 
 		return outputString;
@@ -73,7 +73,7 @@ private:
 	std::vector<Predicate*> factVector;
 	std::vector<Predicate*> queryVector;
 	std::vector<Rule*> ruleVector;
-	std::list<std::string*> domainList;
+	std::set<std::string> domainSet;
 };
 
 

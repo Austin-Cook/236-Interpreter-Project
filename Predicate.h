@@ -22,7 +22,7 @@ public:
 		std::string outputString = "";
 		outputString.append(id + "(");
 		for(int i = 0; i < parameterVector.size(); ++i) {
-			outputString.append("\'" + parameterVector.at(i)->toString() + "\'");
+			outputString.append(parameterVector.at(i)->toString());
 			if(i < parameterVector.size() - 1) {
 				outputString.append(",");
 			}

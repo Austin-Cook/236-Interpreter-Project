@@ -19,7 +19,7 @@ public:
 
 	std::string toString() {
 		std::string outputString = "";
-		outputString.append(headPredicate->toString()) + " :- ";
+		outputString.append(headPredicate->toString() + " :- ");
 		for(int i = 0; i < bodyPredicates.size(); ++i) {
 			outputString.append(bodyPredicates.at(i)->toString());
 			if(i < bodyPredicates.size() - 1) {

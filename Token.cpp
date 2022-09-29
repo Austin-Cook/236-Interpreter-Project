@@ -99,3 +99,8 @@ std::string Token::getTokenTypeAsString() {
 TokenType Token::getTokenType() {
 	return this->type;
 }
+
+std::string Token::getTokenDescription() {
+	return this->description;
+}
+
