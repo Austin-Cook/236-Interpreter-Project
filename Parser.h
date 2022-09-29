@@ -47,7 +47,7 @@ private:
 	DatalogProgram datalog;
 
 	// Temp values to push to datalog to create object
-	std::string tempID;
+	std::string tempID = "";
 	std::vector<Parameter*> tempParameterVector;
 	std::vector<Predicate*> tempBodyPredicatesVector;
 };

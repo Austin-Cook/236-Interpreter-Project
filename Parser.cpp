@@ -29,6 +29,7 @@ static std::string tokenToString[] = {
 Parser::Parser(std::vector<Token *> tokens) {
 	this->tokens = tokens;
 	this->vectorIndex = 0;
+	this->tempID = "";	//FIXME DID this work?
 }
 
 Parser::~Parser() {
@@ -50,7 +51,7 @@ TokenType Parser::GetCurrentToken() {
 
 // Returns the description of the current token
 std::string Parser::GetCTDescription() {
-	return (tokens.at(vectorIndex)->getTokenDescription());	//FIXME change to description value
+	return (tokens.at(vectorIndex)->getTokenDescription());
 }
 
 void Parser::Advance() {
@@ -300,7 +301,6 @@ void Parser::PrintDatalog() {
 void Parser::ResetTempValues() {
 	this->tempID = "";
 	this->tempParameterVector.clear();
-	//delete headPredicate;
 	this->tempBodyPredicatesVector.clear();
 }
 
