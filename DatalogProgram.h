@@ -74,6 +74,14 @@ public:
 		return outputString;
 	}
 
+	std::vector<Predicate*> getSchemeVector() {
+		return schemeVector;
+	}
+
+	std::vector<Predicate*> getFactVector() {
+		return factVector;
+	}
+
 private:
 	std::vector<Predicate*> schemeVector;
 	std::vector<Predicate*> factVector;

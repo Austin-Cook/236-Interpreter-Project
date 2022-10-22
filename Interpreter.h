@@ -5,9 +5,14 @@
 #ifndef PROJECT1_STARTER_CODE_INTERPRETER_H
 #define PROJECT1_STARTER_CODE_INTERPRETER_H
 
+#include "DatalogProgram.h"
+#include "Database.h"
 
 class Interpreter {
-
+public:
+	Interpreter(DatalogProgram datalogProgram);
+private:
+	Database database;
 };
 
 

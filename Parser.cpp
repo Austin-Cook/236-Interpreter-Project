@@ -36,6 +36,10 @@ Parser::~Parser() {
 	// Do Nothing - tokens are deleted in ~Lexar()
 }
 
+DatalogProgram Parser::getDatalog() {
+	return this->datalog;
+}
+
 void Parser::Match(TokenType expectedToken) {
 	if(expectedToken == GetCurrentToken()) {
 		Advance();
@@ -276,7 +280,6 @@ void Parser::ParseParameterList() {
 void Parser::RemoveCommentTokens() {
 	for(int i = tokens.size() - 1; i >= 0; i--) {
 		if(tokens[i]->getTokenTypeAsString() == "COMMENT") {
-			//delete tokens[i];
 			tokens.erase(tokens.begin() + i);
 		}
 	}

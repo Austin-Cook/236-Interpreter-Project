@@ -11,14 +11,14 @@
 
 
 class Relation {
+public:
+	Relation(std::string name, Header* header);
+	void addTuple(Tuple tuple);
+	void toString();
 private:
 	std::string name;
 	Header* header;
 	std::set<Tuple> rows;
-public:
-	Relation(std::string name, Header* header);
-	void addTuple(Tuple tupleToAdd);
-	void toString();
 };
 
 

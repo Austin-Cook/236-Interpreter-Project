@@ -32,6 +32,14 @@ public:
 		return outputString;
 	}
 
+	std::string getId() {
+		return id;
+	}
+
+	std::vector<Parameter*> getParameterVector() {
+		return parameterVector;
+	}
+
 private:
 	std::string id;
 	std::vector<Parameter*> parameterVector;

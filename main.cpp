@@ -1,9 +1,10 @@
 #include "Lexer.h"
 #include "Parser.h"
+#include "Interpreter.h"
 #include <iostream>
 #include <fstream>
 
-#include "Database.h"	//FIXME DELETEME
+#include "Database.h"	// Only for testing
 
 enum mode {
 	RUN = 0,
@@ -11,7 +12,7 @@ enum mode {
 };
 
 int main(int argc, char** argv) {
-	mode currentMode = TEST;
+	mode currentMode = RUN;
 
 	if(currentMode == RUN) {
 		std::string fileString = "";
@@ -39,16 +40,13 @@ int main(int argc, char** argv) {
 			fileString.push_back(EOF);
 		}
 
+		// PROJECT 1
 		// Pass input to lexer and run it --------------------------------------------------
 		Lexer* lexer = new Lexer();
 		lexer->Run(fileString);
 
-
-		// Print tokens from Lexar class in specified format
-		//lexer->printTokens();
-
-		// PROJECT 2 - Delete Comments (The Parser is set up to automatically ignore tokens, so this is not needed)
-		//lexer->RemoveCommentTokens();
+		// Print tokens from Lexer class in specified format
+//		lexer->printTokens();
 
 		// PROJECT 2 - run ParseDatalogProgram function with tokenVector
 		Parser parser(lexer->getTokenVector());
@@ -61,10 +59,14 @@ int main(int argc, char** argv) {
 			std::cout << "  " << error;
 		}
 
-		// Dealocate memory
+		// PROJECT 3 - Pass DatalogProgram object into a new Interpreter to create the Relations
+		Interpreter interpreter(parser.getDatalog());
+
+		// Deallocate memory
 		delete lexer;
 	} else {
 		Database database;
+		database.testDatabaseClasses();
 	}
 
     return 0;

@@ -13,6 +13,7 @@ class Parser {
 public:
 	Parser(std::vector<Token*> tokens);
 	~Parser();
+	DatalogProgram getDatalog();
 	void Match(TokenType expectedToken);
 	TokenType GetCurrentToken();
 	std::string GetCTDescription();

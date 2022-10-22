@@ -10,8 +10,8 @@ Relation::Relation(std::string name, Header* header) {
 	this->header = header;
 }
 
-void Relation::addTuple(Tuple tupleToAdd) {
-	rows.insert(tupleToAdd);
+void Relation::addTuple(Tuple tuple) {
+	rows.insert(tuple);
 }
 
 void Relation::toString() {
@@ -21,7 +21,7 @@ void Relation::toString() {
 			exit(0);
 		} else {
 			for (int i = 0; i < header->getNumAttributes(); i++) {
-				std::cout << header->getAttributeAtIndex(i) << "=\'" << row.getValueAtIndex(i) << "\'";
+				std::cout << header->getAttributeAtIndex(i) << "=" << row.getValueAtIndex(i);
 				if(i < header->getNumAttributes() - 1) {
 					std::cout << ", ";
 				}

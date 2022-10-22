@@ -5,7 +5,28 @@
 #include "Database.h"
 
 Database::Database() {
-	testDatabaseClasses();
+	// Do nothing
+}
+
+void Database::addRelation(std::string name, Header* header) {
+		Relation* relation = new Relation(name, header);
+		relationMap.insert(std::pair<std::string, Relation*>(name, relation));
+}
+
+void Database::addTupleToRelation(Tuple tuple, std::string name) {
+	if(relationMap.find(name) != relationMap.end()) {
+		relationMap.find(name)->second->addTuple(tuple);
+	} else {
+		std::cerr << "Error (in addTupleToRelation()): Relation with name \'" << name << "/' doesn't exist";
+	}
+}
+
+void Database::printRelationByName(std::string name) {
+	if(relationMap.find(name) != relationMap.end()) {
+		relationMap.find(name)->second->toString();
+	} else {
+		std::cerr << "Error (in printRelationByName()): Relation with name \'" << name << "/' doesn't exist";
+	}
 }
 
 void Database::testDatabaseClasses() {
