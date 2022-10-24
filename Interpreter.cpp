@@ -61,27 +61,28 @@ Relation* Interpreter::evaluatePredicate(const Predicate& p) {
 		if(p.getParameterVector().at(paramIndex)->isConstant()) {
 			// Do type 1 selection (For constants - 'strings')
 			r = select1(paramIndex, p.getParameterVector().at(paramIndex)->toString());
-			std::cout << "newRelation: " << std::endl;
-			for(Tuple row : r->getRows()) {
-				row.toString();
-			}
 		} else {
-//			// if we have seen it before
-//			//if(p.getParameterVector().at(paramIndex) //finish)
-//			int indexFoundAt = -1;
-//
-//			for(int i = 0; i < variableVector.size(); i++) {
-//				// check if we have seen the variable before
-//				if(variableVector.at(i) == p.getParameterVector().at(paramIndex)->toString()) {
-//					indexFoundAt = i;
-//				}
-//			}
-//			if(indexFoundAt != -1) {	// We have seen it before
-//				// do type 2 selection ()
-//				select2()
-//			} else {
-//				// mark it to keep for the project and rename
-//			}
+			// if we have seen it before
+			int indexFoundAt = -1;
+
+			for(int i = 0; i < variableVector.size(); i++) {
+				// check if we have seen the variable before
+				if(variableVector.at(i) == p.getParameterVector().at(paramIndex)->toString()) {
+					indexFoundAt = i;
+				}
+			}
+			if(indexFoundAt != -1) {	// We have seen it before
+				// do type 2 selection ()
+				r = select2(indexFoundAt, paramIndex);
+				std::cout << "newRelation: " << std::endl;
+				for(Tuple row : r->getRows()) {
+					row.toString();
+				}
+			} else {
+				// mark it to keep for the project and rename
+				variableVector.push_back(p.getParameterVector().at(paramIndex)->toString());
+				variableIndexVector.push_back(paramIndex);
+			}
 		}
 
 	}
@@ -105,5 +106,15 @@ Relation* Interpreter::select1(int position, std::string value) {
 }
 
 Relation* Interpreter::select2(int position1, int position2) {
-
+	std::cout << "Running select2 with position: " << position1 << ", and: " << position2 << std::endl;
+	Relation* relationToReturn = new Relation(r->getName(), r->getHeader()); //FIXME CAREFUL THAT THE HEADER IS NEVER MODIFIED
+	std::set<Tuple> oldRows = r->getRows();
+	for(Tuple row : oldRows) {
+		// if the row at both positions contain the same value
+		if(row.getValueAtIndex(position1) == row.getValueAtIndex(position2)) {
+			// add it to the newRelation
+			relationToReturn->addTuple(row);
+		}
+	}
+	return relationToReturn;
 }
