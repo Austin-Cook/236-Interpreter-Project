@@ -50,7 +50,10 @@ Interpreter::Interpreter(DatalogProgram datalogProgram) {
 // A Predicate is a specific query
 Relation* Interpreter::evaluatePredicate(const Predicate& p) {
 	// get the relation 'r' with the same name as the query 'q'
-	Relation* r = database.getRelationByName(p.getId());
+	r = database.getRelationByName(p.getId());
+	variableVector.clear();
+	variableIndexVector.clear();
+	Relation* newRelation; // Set to value returned from each select/project/rename
 
 	// for each parameter in the query
 	int numParameters = p.getParameterVector().size();
@@ -58,20 +61,26 @@ Relation* Interpreter::evaluatePredicate(const Predicate& p) {
 		// select for each constant (string) in the query 'q'
 		if(p.getParameterVector().at(paramIndex)->isConstant()) {
 			// Do type 1 selection (For constants - 'strings')
-			Relation* newRelation = new Relation(r->getName(), r->getHeader()); //FIXME CAREFUL THAT THE HEADER IS NEVER MODIFIED
-			std::set<Tuple> oldRows = r->getRows();
-			for(Tuple row : oldRows) {
-				// if a row contains the same value at the same index as the one being searched for
-				if(row.getValueAtIndex(paramIndex) == p.getParameterVector().at(paramIndex)->toString()) {
-					// add it to the newRelation
-					newRelation->addTuple(row);
-				}
+			newRelation = select1(paramIndex, p.getParameterVector().at(paramIndex)->toString());
+			std::cout << "newRelation: " << std::endl;
+			for(Tuple row : newRelation->getRows()) {
+				row.toString();
 			}
 		} else {
-			// if we have seen it before
-			// do type 2 selection ()
-			// else
-			// mark it to keep for the project and rename
+//			// if we have seen it before
+//			//if(p.getParameterVector().at(paramIndex) //finish)
+//			int indexFoundAt = -1;
+//			for(int i = 0; i < variableVector.size(); i++) {
+//				// check if we have seen the variable before
+//				if(variableVector.at(i) == p.getParameterVector().at(paramIndex)->toString()) {
+//					indexFoundAt = i;
+//				}//FIXME FINISH THIS
+//			}
+//			if(indexFoundAt != -1) {	// We have seen it before
+//				// do type 2 selection ()
+//			} else {
+//				// mark it to keep for the project and rename
+//			}
 		}
 
 	}
@@ -79,4 +88,17 @@ Relation* Interpreter::evaluatePredicate(const Predicate& p) {
 	// project using the positions of the variables in 'q'
 	// rename to match the names of variables in 'q'
 	// print the resulting relation
+}
+
+Relation* Interpreter::select1(int position, std::string value) {
+	Relation* relationToReturn = new Relation(r->getName(), r->getHeader()); //FIXME CAREFUL THAT THE HEADER IS NEVER MODIFIED
+	std::set<Tuple> oldRows = r->getRows();
+	for(Tuple row : oldRows) {
+		// if a row contains the same value at the same index as the one being searched for
+		if(row.getValueAtIndex(position) == value) {
+			// add it to the newRelation
+			relationToReturn->addTuple(row);
+		}
+	}
+	return relationToReturn;
 }

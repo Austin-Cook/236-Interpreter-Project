@@ -13,6 +13,11 @@ class Interpreter {
 public:
 	Interpreter(DatalogProgram datalogProgram);
 	Relation* evaluatePredicate(const Predicate& p);
+	// r is set as a temp relation in each iteration of evaluatePredicate() and is accessed by the select, project, and rename functions
+	Relation* r;
+	std::vector<std::string> variableVector;
+	std::vector<int> variableIndexVector;
+	Relation* select1(int position, std::string value);
 private:
 	Database database;
 };
