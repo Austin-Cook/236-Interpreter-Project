@@ -74,20 +74,24 @@ Relation* Interpreter::evaluatePredicate(const Predicate& p) {
 			if(indexFoundAt != -1) {	// We have seen it before
 				// do type 2 selection ()
 				r = select2(indexFoundAt, paramIndex);
-				std::cout << "newRelation: " << std::endl;
-				for(Tuple row : r->getRows()) {
-					row.toString();
-				}
 			} else {
 				// mark it to keep for the project and rename
 				variableVector.push_back(p.getParameterVector().at(paramIndex)->toString());
 				variableIndexVector.push_back(paramIndex);
 			}
 		}
-
 	}
-	// select type 2 - for each pair of matching variables in 'q'
 	// project using the positions of the variables in 'q'
+	r = project(variableIndexVector);
+
+//	int j = 0;
+//	std::cout << "newRelation: " << std::endl;
+//	for(Tuple row : r->getRows()) {
+//		std::cout << "Row: " << j << " - ";
+//		row.toString();
+//		std::cout << std::endl;
+//		j++;
+//	}
 	// rename to match the names of variables in 'q'
 	// print the resulting relation
 }
@@ -115,6 +119,34 @@ Relation* Interpreter::select2(int position1, int position2) {
 			// add it to the newRelation
 			relationToReturn->addTuple(row);
 		}
+	}
+	return relationToReturn;
+}
+
+Relation* Interpreter::project(std::vector<int> colsToInclude) {
+	std::set<Tuple> oldRows = r->getRows();
+
+	Header* newHeader = new Header;
+	std::cout << "Columns to be added: ";
+	for(int i = 0; i < colsToInclude.size(); i++) {
+		std::cout << colsToInclude.at(i) << ", ";
+	}
+	std::cout << std::endl;
+	for(int colIndex : colsToInclude) {
+		// add selected attribute from old header to new
+		newHeader->addAttribute(r->getHeader()->getAttributeAtIndex(colIndex));
+	}
+	Relation* relationToReturn = new Relation(r->getName(), newHeader); //FIXME CAREFUL THAT THE HEADER IS NEVER MODIFIED
+
+	for(Tuple row : r->getRows()) {
+		// for each tuple in the old relation
+		// create a new tuple
+		Tuple newTuple;
+		for(int colIndex : colsToInclude) {
+			// add selected value from old row to new
+			newTuple.addValue(row.getValueAtIndex(colIndex));
+		}
+		relationToReturn->addTuple(newTuple);
 	}
 	return relationToReturn;
 }
