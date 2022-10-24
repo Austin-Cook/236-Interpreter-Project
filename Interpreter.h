@@ -18,6 +18,7 @@ public:
 	std::vector<std::string> variableVector;
 	std::vector<int> variableIndexVector;
 	Relation* select1(int position, std::string value);
+	Relation* select2(int position1, int position2);
 private:
 	Database database;
 };

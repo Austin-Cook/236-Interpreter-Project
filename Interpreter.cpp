@@ -53,7 +53,6 @@ Relation* Interpreter::evaluatePredicate(const Predicate& p) {
 	r = database.getRelationByName(p.getId());
 	variableVector.clear();
 	variableIndexVector.clear();
-	Relation* newRelation; // Set to value returned from each select/project/rename
 
 	// for each parameter in the query
 	int numParameters = p.getParameterVector().size();
@@ -61,23 +60,25 @@ Relation* Interpreter::evaluatePredicate(const Predicate& p) {
 		// select for each constant (string) in the query 'q'
 		if(p.getParameterVector().at(paramIndex)->isConstant()) {
 			// Do type 1 selection (For constants - 'strings')
-			newRelation = select1(paramIndex, p.getParameterVector().at(paramIndex)->toString());
+			r = select1(paramIndex, p.getParameterVector().at(paramIndex)->toString());
 			std::cout << "newRelation: " << std::endl;
-			for(Tuple row : newRelation->getRows()) {
+			for(Tuple row : r->getRows()) {
 				row.toString();
 			}
 		} else {
 //			// if we have seen it before
 //			//if(p.getParameterVector().at(paramIndex) //finish)
 //			int indexFoundAt = -1;
+//
 //			for(int i = 0; i < variableVector.size(); i++) {
 //				// check if we have seen the variable before
 //				if(variableVector.at(i) == p.getParameterVector().at(paramIndex)->toString()) {
 //					indexFoundAt = i;
-//				}//FIXME FINISH THIS
+//				}
 //			}
 //			if(indexFoundAt != -1) {	// We have seen it before
 //				// do type 2 selection ()
+//				select2()
 //			} else {
 //				// mark it to keep for the project and rename
 //			}
@@ -101,4 +102,8 @@ Relation* Interpreter::select1(int position, std::string value) {
 		}
 	}
 	return relationToReturn;
+}
+
+Relation* Interpreter::select2(int position1, int position2) {
+
 }
