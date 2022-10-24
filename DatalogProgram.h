@@ -82,6 +82,10 @@ public:
 		return factVector;
 	}
 
+	std::vector<Predicate*> getQueryVector() {
+		return queryVector;
+	}
+
 private:
 	std::vector<Predicate*> schemeVector;
 	std::vector<Predicate*> factVector;

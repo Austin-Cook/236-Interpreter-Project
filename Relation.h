@@ -15,6 +15,9 @@ public:
 	Relation(std::string name, Header* header);
 	void addTuple(Tuple tuple);
 	void toString();
+	std::string getName() const;
+	Header* getHeader() const;
+	std::set<Tuple> getRows() const;
 private:
 	std::string name;
 	Header* header;

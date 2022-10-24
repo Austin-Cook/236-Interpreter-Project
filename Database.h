@@ -7,8 +7,7 @@
 
 #include <map>
 #include "Relation.h"
-#include "Header.h"		// Only here for testing
-#include "Tuple.h"		// Only here for testing
+
 
 class Database {
 public:
@@ -16,6 +15,7 @@ public:
 	void addRelation(std::string name, Header* header);
 	void addTupleToRelation(Tuple tuple, std::string name);
 	void printRelationByName(std::string name);
+	Relation* getRelationByName(std::string name);
 	void testDatabaseClasses();
 private:
 	std::map<std::string, Relation*> relationMap;

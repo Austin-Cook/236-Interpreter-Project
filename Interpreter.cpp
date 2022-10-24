@@ -37,14 +37,46 @@ Interpreter::Interpreter(DatalogProgram datalogProgram) {
 		database.addTupleToRelation(tuple, factVector.at(factIndex)->getId());
 	}
 
-	database.printRelationByName("snap");
+	// FIXME DELETEME
+	//database.printRelationByName("snap");
 
-// for each query 'q'
+	// for each query 'q' - Run through select, project, and rename
+	std::vector<Predicate*> queryVector = datalogProgram.getQueryVector();
+	for(int queryIndex = 0; queryIndex < queryVector.size(); queryIndex++) {
+		evaluatePredicate(*(queryVector.at(queryIndex)));		//FIXME is this right? Pass dereferenced pointer as reference
+	}
+}
+
+// A Predicate is a specific query
+Relation* Interpreter::evaluatePredicate(const Predicate& p) {
 	// get the relation 'r' with the same name as the query 'q'
-	// select for each constant (string) in the query 'q'
-	// select for each pair of matching variables in 'q'
+	Relation* r = database.getRelationByName(p.getId());
+
+	// for each parameter in the query
+	int numParameters = p.getParameterVector().size();
+	for(int paramIndex = 0; paramIndex < numParameters; paramIndex++) {
+		// select for each constant (string) in the query 'q'
+		if(p.getParameterVector().at(paramIndex)->isConstant()) {
+			// Do type 1 selection (For constants - 'strings')
+			Relation* newRelation = new Relation(r->getName(), r->getHeader()); //FIXME CAREFUL THAT THE HEADER IS NEVER MODIFIED
+			std::set<Tuple> oldRows = r->getRows();
+			for(Tuple row : oldRows) {
+				// if a row contains the same value at the same index as the one being searched for
+				if(row.getValueAtIndex(paramIndex) == p.getParameterVector().at(paramIndex)->toString()) {
+					// add it to the newRelation
+					newRelation->addTuple(row);
+				}
+			}
+		} else {
+			// if we have seen it before
+			// do type 2 selection ()
+			// else
+			// mark it to keep for the project and rename
+		}
+
+	}
+	// select type 2 - for each pair of matching variables in 'q'
 	// project using the positions of the variables in 'q'
 	// rename to match the names of variables in 'q'
 	// print the resulting relation
-
 }

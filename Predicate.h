@@ -32,11 +32,11 @@ public:
 		return outputString;
 	}
 
-	std::string getId() {
+	std::string getId() const {
 		return id;
 	}
 
-	std::vector<Parameter*> getParameterVector() {
+	std::vector<Parameter*> getParameterVector() const {
 		return parameterVector;
 	}
 

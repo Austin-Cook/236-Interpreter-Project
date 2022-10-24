@@ -8,9 +8,11 @@
 #include "DatalogProgram.h"
 #include "Database.h"
 
+
 class Interpreter {
 public:
 	Interpreter(DatalogProgram datalogProgram);
+	Relation* evaluatePredicate(const Predicate& p);
 private:
 	Database database;
 };
