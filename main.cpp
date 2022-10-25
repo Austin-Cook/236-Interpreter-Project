@@ -19,12 +19,12 @@ int main(int argc, char** argv) {
 
 		// Prep fileString ------------------------------------------------------------------
 		// Verify num arguments
-		if(argc != 3) {		//FIXME Lab Machines - 2 args, CLion - 3 args :: (0) C:rest_of_path.exe (1) ./main (2) text_file_name.txt
+		if(argc != 2) {		//FIXME Lab Machines - 2 args, CLion - 3 args :: (0) C:rest_of_path.exe (1) ./main (2) text_file_name.txt
 			std::cerr << "Invalid number of arguments";
 		}
 
 		// Open file
-		std::string fileName = argv[2];	//FIXME Lab Machines - argv[1], Clion - argv[2]
+		std::string fileName = argv[1];	//FIXME Lab Machines - argv[1], Clion - argv[2]
 		std::ifstream textFile(fileName);
 		if(textFile.fail()) {
 			std::cerr << "Failed";
