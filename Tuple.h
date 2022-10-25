@@ -28,9 +28,9 @@ public:
 	}
 	void toString() {
 		std::cout << "Tuple: ";
-		for(int i = 0; i < values.size(); i++) {
+		for(int i = 0; i < int(values.size()); i++) {
 			std::cout << values.at(i);
-			if(i < values.size() - 1) {
+			if(i < int(values.size()) - 1) {
 				std::cout << ", ";
 			}
 		}

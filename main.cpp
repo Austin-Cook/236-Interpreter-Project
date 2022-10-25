@@ -52,8 +52,8 @@ int main(int argc, char** argv) {
 		Parser parser(lexer->getTokenVector());
 		try {
 			parser.ParseDatalogProgram();
-			std::cout << "Success!" << std::endl;
-			parser.PrintDatalog();
+//			std::cout << "Success!" << std::endl;		// Project 2 Standard Output
+//			parser.PrintDatalog();
 		} catch(std::string error) {
 			std::cout << "Failure!" << std::endl;
 			std::cout << "  " << error;

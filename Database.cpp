@@ -34,6 +34,7 @@ Relation* Database::getRelationByName(std::string name) {
 		return(relationMap.find(name)->second);
 	} else {
 		std::cerr << "Error (in getRelationByName()): Relation with name '" << name << "/' doesn't exist";
+		exit(1);
 	}
 }
 

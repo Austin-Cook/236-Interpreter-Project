@@ -13,7 +13,7 @@ Interpreter::Interpreter(DatalogProgram datalogProgram) {
 
 	// for each scheme 's'
 	std::vector<Predicate*> schemeVector = datalogProgram.getSchemeVector();
-	for(int schemeIndex = 0; schemeIndex < schemeVector.size(); schemeIndex++) {
+	for(int schemeIndex = 0; schemeIndex < int(schemeVector.size()); schemeIndex++) {
 		// create a relation using name and parameter values from 's'
 		Header* header = new Header;
 		// Create the header
@@ -26,7 +26,7 @@ Interpreter::Interpreter(DatalogProgram datalogProgram) {
 
 	// for each fact 'f'
 	std::vector<Predicate*> factVector = datalogProgram.getFactVector();
-	for(int factIndex = 0; factIndex < factVector.size(); factIndex++) {
+	for(int factIndex = 0; factIndex < int(factVector.size()); factIndex++) {
 		// make a tuple 't' using the values form 'f'
 		Tuple tuple;
 		int numFacts = factVector.at(factIndex)->getParameterVector().size();
@@ -39,8 +39,23 @@ Interpreter::Interpreter(DatalogProgram datalogProgram) {
 
 	// for each query 'q' - Run through select, project, and rename
 	std::vector<Predicate*> queryVector = datalogProgram.getQueryVector();
-	for(int queryIndex = 0; queryIndex < queryVector.size(); queryIndex++) {
-		evaluatePredicate(*(queryVector.at(queryIndex)));
+	for(int queryIndex = 0; queryIndex < int(queryVector.size()); queryIndex++) {
+		Relation* resultingRelation = evaluatePredicate(*(queryVector.at(queryIndex)));
+		// print the resulting relation in specified format
+		std::cout << queryVector.at(queryIndex)->getId() << "(";
+		for(int i = 0; i < int(queryVector.at(queryIndex)->getParameterVector().size()); i++) {
+			std::cout << queryVector.at(queryIndex)->getParameterVector().at(i)->toString();
+			if(i < int(queryVector.at(queryIndex)->getParameterVector().size()) - 1) {
+				std::cout << ",";
+			}
+		}
+		std::cout << ")? ";
+		if(r->getRows().size() > 0) {
+			std::cout << "Yes(" << r->getRows().size() << ")" << std::endl;
+		} else {
+			std::cout << "No" << std::endl;
+		}
+		r->toString();
 	}
 }
 
@@ -50,7 +65,6 @@ Relation* Interpreter::evaluatePredicate(const Predicate& p) {
 	r = database.getRelationByName(p.getId());
 	variableVector.clear();
 	variableIndexVector.clear();
-	int numMatches = 0;
 
 	// for each parameter in the query
 	int numParameters = p.getParameterVector().size();
@@ -63,7 +77,7 @@ Relation* Interpreter::evaluatePredicate(const Predicate& p) {
 			// if we have seen it before
 			int indexFoundAt = -1;
 
-			for(int i = 0; i < variableVector.size(); i++) {
+			for(int i = 0; i < int(variableVector.size()); i++) {
 				// check if we have seen the variable before
 				if(variableVector.at(i) == p.getParameterVector().at(paramIndex)->toString()) {
 					indexFoundAt = i;
@@ -83,21 +97,8 @@ Relation* Interpreter::evaluatePredicate(const Predicate& p) {
 	r = project();
 	// rename to match the names of variables in 'q'
 	r = rename();
-	// print the resulting relation
-	std::cout << p.getId() << "(";
-	for(int i = 0; i < p.getParameterVector().size(); i++) {
-		std::cout << p.getParameterVector().at(i)->toString();
-		if(i < p.getParameterVector().size() - 1) {
-			std::cout << ",";
-		}
-	}
-	std::cout << ")? ";
-	if(r->getRows().size() > 0) {
-		std::cout << "Yes(" << r->getRows().size() << ")" << std::endl;
-	} else {
-		std::cout << "No" << std::endl;
-	}
-	r->toString();
+
+	return r;
 }
 
 Relation* Interpreter::select1(int position, std::string value) {
@@ -154,7 +155,7 @@ Relation* Interpreter::rename() {
 	Header* newHeader = new Header;
 
 	// create the header with new names
-	for(int i = 0; i < variableIndexVector.size(); i++) {
+	for(int i = 0; i < int(variableIndexVector.size()); i++) {
 		newHeader->addAttribute(variableVector.at(i));
 	}
 	Relation* relationToReturn = new Relation(r->getName(), newHeader);
