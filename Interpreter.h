@@ -19,7 +19,8 @@ public:
 	std::vector<int> variableIndexVector;
 	Relation* select1(int position, std::string value);
 	Relation* select2(int position1, int position2);
-	Relation* project(std::vector<int> colsToInclude);
+	Relation* project();
+	Relation* rename();
 private:
 	Database database;
 };

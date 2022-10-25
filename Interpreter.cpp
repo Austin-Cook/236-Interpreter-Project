@@ -37,13 +37,10 @@ Interpreter::Interpreter(DatalogProgram datalogProgram) {
 		database.addTupleToRelation(tuple, factVector.at(factIndex)->getId());
 	}
 
-	// FIXME DELETEME
-	//database.printRelationByName("snap");
-
 	// for each query 'q' - Run through select, project, and rename
 	std::vector<Predicate*> queryVector = datalogProgram.getQueryVector();
 	for(int queryIndex = 0; queryIndex < queryVector.size(); queryIndex++) {
-		evaluatePredicate(*(queryVector.at(queryIndex)));		//FIXME is this right? Pass dereferenced pointer as reference
+		evaluatePredicate(*(queryVector.at(queryIndex)));
 	}
 }
 
@@ -53,6 +50,7 @@ Relation* Interpreter::evaluatePredicate(const Predicate& p) {
 	r = database.getRelationByName(p.getId());
 	variableVector.clear();
 	variableIndexVector.clear();
+	int numMatches = 0;
 
 	// for each parameter in the query
 	int numParameters = p.getParameterVector().size();
@@ -82,22 +80,28 @@ Relation* Interpreter::evaluatePredicate(const Predicate& p) {
 		}
 	}
 	// project using the positions of the variables in 'q'
-	r = project(variableIndexVector);
-
-//	int j = 0;
-//	std::cout << "newRelation: " << std::endl;
-//	for(Tuple row : r->getRows()) {
-//		std::cout << "Row: " << j << " - ";
-//		row.toString();
-//		std::cout << std::endl;
-//		j++;
-//	}
+	r = project();
 	// rename to match the names of variables in 'q'
+	r = rename();
 	// print the resulting relation
+	std::cout << p.getId() << "(";
+	for(int i = 0; i < p.getParameterVector().size(); i++) {
+		std::cout << p.getParameterVector().at(i)->toString();
+		if(i < p.getParameterVector().size() - 1) {
+			std::cout << ",";
+		}
+	}
+	std::cout << ")? ";
+	if(r->getRows().size() > 0) {
+		std::cout << "Yes(" << r->getRows().size() << ")" << std::endl;
+	} else {
+		std::cout << "No" << std::endl;
+	}
+	r->toString();
 }
 
 Relation* Interpreter::select1(int position, std::string value) {
-	Relation* relationToReturn = new Relation(r->getName(), r->getHeader()); //FIXME CAREFUL THAT THE HEADER IS NEVER MODIFIED
+	Relation* relationToReturn = new Relation(r->getName(), r->getHeader());
 	std::set<Tuple> oldRows = r->getRows();
 	for(Tuple row : oldRows) {
 		// if a row contains the same value at the same index as the one being searched for
@@ -110,8 +114,7 @@ Relation* Interpreter::select1(int position, std::string value) {
 }
 
 Relation* Interpreter::select2(int position1, int position2) {
-	std::cout << "Running select2 with position: " << position1 << ", and: " << position2 << std::endl;
-	Relation* relationToReturn = new Relation(r->getName(), r->getHeader()); //FIXME CAREFUL THAT THE HEADER IS NEVER MODIFIED
+	Relation* relationToReturn = new Relation(r->getName(), r->getHeader());
 	std::set<Tuple> oldRows = r->getRows();
 	for(Tuple row : oldRows) {
 		// if the row at both positions contain the same value
@@ -123,30 +126,42 @@ Relation* Interpreter::select2(int position1, int position2) {
 	return relationToReturn;
 }
 
-Relation* Interpreter::project(std::vector<int> colsToInclude) {
+Relation* Interpreter::project() {
 	std::set<Tuple> oldRows = r->getRows();
-
 	Header* newHeader = new Header;
-	std::cout << "Columns to be added: ";
-	for(int i = 0; i < colsToInclude.size(); i++) {
-		std::cout << colsToInclude.at(i) << ", ";
-	}
-	std::cout << std::endl;
-	for(int colIndex : colsToInclude) {
+
+	for(int colIndex : variableIndexVector) {
 		// add selected attribute from old header to new
 		newHeader->addAttribute(r->getHeader()->getAttributeAtIndex(colIndex));
 	}
-	Relation* relationToReturn = new Relation(r->getName(), newHeader); //FIXME CAREFUL THAT THE HEADER IS NEVER MODIFIED
+	Relation* relationToReturn = new Relation(r->getName(), newHeader);
 
 	for(Tuple row : r->getRows()) {
 		// for each tuple in the old relation
 		// create a new tuple
 		Tuple newTuple;
-		for(int colIndex : colsToInclude) {
+		for(int colIndex : variableIndexVector) {
 			// add selected value from old row to new
 			newTuple.addValue(row.getValueAtIndex(colIndex));
 		}
 		relationToReturn->addTuple(newTuple);
 	}
+	return relationToReturn;
+}
+
+Relation* Interpreter::rename() {
+	std::set<Tuple> oldRows = r->getRows();
+	Header* newHeader = new Header;
+
+	// create the header with new names
+	for(int i = 0; i < variableIndexVector.size(); i++) {
+		newHeader->addAttribute(variableVector.at(i));
+	}
+	Relation* relationToReturn = new Relation(r->getName(), newHeader);
+	// copy the tuples from the old relation to the new
+	for(Tuple row : r->getRows()) {
+		relationToReturn->addTuple(row);
+	}
+
 	return relationToReturn;
 }
