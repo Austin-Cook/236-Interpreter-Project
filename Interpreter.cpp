@@ -50,12 +50,12 @@ Interpreter::Interpreter(DatalogProgram datalogProgram) {
 			}
 		}
 		std::cout << ")? ";
-		if(r->getRows().size() > 0) {
-			std::cout << "Yes(" << r->getRows().size() << ")" << std::endl;
+		if(resultingRelation->getRows().size() > 0) {
+			std::cout << "Yes(" << resultingRelation->getRows().size() << ")" << std::endl;
 		} else {
 			std::cout << "No" << std::endl;
 		}
-		r->toString();
+		resultingRelation->toString();
 	}
 }
 
