@@ -126,6 +126,7 @@ bool Interpreter::evaluateRule(const Rule& rule) {		// * r  is an instance data 
 		relationsFromBodyPredicates.push_back(evaluatePredicate(*(bodyPredicates.at(i))));
 	}
 
+
 	// (2) join the relations that result
 	// take the relation of the first bodyPredicate and store it as result
 	Relation* result = relationsFromBodyPredicates.at(0);
@@ -136,11 +137,51 @@ bool Interpreter::evaluateRule(const Rule& rule) {		// * r  is an instance data 
 	std::cout << "New relation after joining: " << std::endl;
 	result->toString();
 
+
 	// (3) project columns that appear in the head predicate
+	r = result;
+	variableIndexVector.clear();
+	variableVector.clear();
+
+	// get indexes to project, and corresponding names for rename
+	// for each parameter in the rule's head predicate
+	for(int paramIndex = 0; paramIndex < rule.getHeadPredicate()->getParameterVector().size(); paramIndex++) {
+		// for each header attribute in the resulting relation
+		bool found = false;
+		for(int headerIndex = 0; headerIndex < r->getHeader()->getNumAttributes(); headerIndex++) {
+			// if the param in the headPredicate == the attribute name in the new relation header
+			if(rule.getHeadPredicate()->getParameterVector().at(paramIndex)->toString() == r->getHeader()->getAttributeAtIndex(headerIndex)) {
+				found = true;
+				variableIndexVector.push_back(headerIndex);
+				variableVector.push_back(rule.getHeadPredicate()->getParameterVector().at(paramIndex)->toString());
+			}
+		}
+		if(found == false) {
+			std::cerr << "Error! - in part 3 (project) of evaluateRule(). The attribute: " << rule.getHeadPredicate()->getParameterVector().at(paramIndex)->toString() << " in the head predicate was not found in the resulting relation" <<std::endl;
+		}
+	}
+
+	result = project();
+
+	// for testing
+	std::cout << "variableVector before projecting" << std::endl;
+	for(int i = 0; i < variableVector.size(); i++) {
+		std::cout << variableVector.at(i) << ", " << std::endl;
+	}
+	std::cout << "variableIndexVector before projecting" << std::endl;
+	for(int i = 0; i < variableIndexVector.size(); i++) {
+		std::cout << variableIndexVector.at(i) << ", " << std::endl;
+	}
+
+	std::cout << "result after projecting: " << std::endl;
+	result->toString();
 
 	// (4) rename the relation to make it union-compatible
+	//rename();
+
 
 	// (5) union the relation with the database
+
 
 }
 
