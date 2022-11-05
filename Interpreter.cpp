@@ -120,17 +120,22 @@ Relation* Interpreter::evaluatePredicate(const Predicate& p) {
 
 bool Interpreter::evaluateRule(const Rule& rule) {		// * r  is an instance data member Relation*
 	// (1) evaluatePredicate (same as for queries)
+	std::vector<Predicate*> bodyPredicates = rule.getBodyPredicatesVector();
+	std::vector<Relation*> relationsFromBodyPredicates;
+	for(int i = 0; i < bodyPredicates.size(); i++) {
+		relationsFromBodyPredicates.push_back(evaluatePredicate(*(bodyPredicates.at(i))));
+	}
 
 	// (2) join the relations that result
-	std::vector<Predicate*> bodyPredicates = rule.getBodyPredicatesVector(); // FIXME I need to be passing in the evaluated predicates before joining them
 	// take the relation of the first bodyPredicate and store it as result
-	Relation* result = database.getRelationByName(bodyPredicates.at(0)->getId());
+	Relation* result = relationsFromBodyPredicates.at(0);
 	for(int bodyPredicateIndex = 1; bodyPredicateIndex < bodyPredicates.size(); bodyPredicateIndex++) {
-		// for bodyPredicates at index 1 and on, join: alpha - result with beta - relation corresponding to the bodyPredicate at bodyPredicateIndex
-		result = join(result, database.getRelationByName(bodyPredicates.at(bodyPredicateIndex)->getId()), rule.getHeadPredicate()->getId());
+		// for relationsFromBodyPredicates at index 1 and on, join: alpha - result with beta - relation corresponding to the bodyPredicate at bodyPredicateIndex
+		result = join(result, relationsFromBodyPredicates.at(bodyPredicateIndex), rule.getHeadPredicate()->getId());
 	}
 	std::cout << "New relation after joining: " << std::endl;
 	result->toString();
+
 	// (3) project columns that appear in the head predicate
 
 	// (4) rename the relation to make it union-compatible
