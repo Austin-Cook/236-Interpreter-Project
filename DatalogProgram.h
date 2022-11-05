@@ -82,6 +82,10 @@ public:
 		return factVector;
 	}
 
+	std::vector<Rule*> getRuleVector() {
+		return ruleVector;
+	}
+
 	std::vector<Predicate*> getQueryVector() {
 		return queryVector;
 	}

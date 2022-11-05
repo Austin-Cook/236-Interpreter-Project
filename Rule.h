@@ -30,6 +30,10 @@ public:
 
 		return outputString;
 	}
+
+	std::vector<Predicate*> getBodyPredicatesVector() const {
+		return bodyPredicates;
+	}
 private:
 	Predicate* headPredicate;
 	std::vector<Predicate*> bodyPredicates;

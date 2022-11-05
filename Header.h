@@ -24,6 +24,17 @@ public:
 	std::string getAttributeAtIndex(int index) {
 		return attributes.at(index);
 	}
+
+	bool containsAttribute(std::string attribute) {
+		bool found = false;
+		for(int i = 0; i < attributes.size(); i++) {
+			if(attributes.at(i) == attribute) {
+				found = true;
+			}
+		}
+
+		return found;
+	}
 };
 
 

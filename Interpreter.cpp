@@ -37,6 +37,22 @@ Interpreter::Interpreter(DatalogProgram datalogProgram) {
 		database.addTupleToRelation(tuple, factVector.at(factIndex)->getId());
 	}
 
+	// evaluate rules
+	std::vector<Rule*> ruleVector = datalogProgram.getRuleVector();
+	bool tuplesAdded = false;
+	// fixed point algorithm
+	// TODO add while loop for fixed point algorithm here
+		// reset the variable(s) keeping track of if new tuples were added
+		tuplesAdded = false;
+		// evaluate all the rules
+		for(int ruleIndex = 0; ruleIndex < int(ruleVector.size()); ruleIndex++) {
+			// for each rule 'r'
+			if(evaluateRule(*(ruleVector.at(ruleIndex))) == true) {
+				tuplesAdded = true;
+			}
+		}
+		// TODO repeat if new tuples were added
+
 	// for each query 'q' - Run through select, project, and rename
 	std::vector<Predicate*> queryVector = datalogProgram.getQueryVector();
 	for(int queryIndex = 0; queryIndex < int(queryVector.size()); queryIndex++) {
@@ -99,6 +115,25 @@ Relation* Interpreter::evaluatePredicate(const Predicate& p) {
 	r = rename();
 
 	return r;
+}
+
+bool Interpreter::evaluateRule(const Rule& rule) {		// * r  is an instance data member Relation*
+	// (1) evaluatePredicate (same as for queries)
+
+	// (2) join the relations that result
+	std::vector<Predicate*> bodyPredicates = rule.getBodyPredicatesVector();
+	// take the relation of the first bodyPredicate and store it as result
+	Relation* result = database.getRelationByName(bodyPredicates.at(0)->getId());
+	for(int bodyPredicateIndex = 1; bodyPredicateIndex < bodyPredicates.size(); bodyPredicateIndex++) {
+		// for bodyPredicates at index 1 and on, join: alpha - result with beta - relation corresponding to the bodyPredicate at bodyPredicateIndex
+		result = join(result, database.getRelationByName(bodyPredicates.at(bodyPredicateIndex)->getId()));
+	}
+	// (3) project columns that appear in the head predicate
+
+	// (4) rename the relation to make it union-compatible
+
+	// (5) union the relation with the database
+
 }
 
 Relation* Interpreter::select1(int position, std::string value) {
@@ -165,4 +200,60 @@ Relation* Interpreter::rename() {
 	}
 
 	return relationToReturn;
+}
+
+Relation* Interpreter::join(Relation* alpha, Relation* beta) {
+	// for testing
+	std::cout << "alpha.toString():" << std::endl;
+	alpha->toString();
+	std::cout << "beta.toString():" << std::endl;
+	beta->toString();
+
+	// combine headers
+	Header* joinedHeader = combineHeaders(alpha->getHeader(), beta->getHeader());
+
+	// for testing
+	std::cout << "joinedHeader: ";
+	for(int i = 0; i < joinedHeader->getNumAttributes(); i++) {
+		std::cout << joinedHeader->getAttributeAtIndex(i) << ", ";
+	}
+	std::cout << std::endl;
+
+	// get the tuples containing indexes from alpha and beta that match (alphaHeaderIndex, betaHeaderIndex)
+	std::set<std::pair<int, int>> matchingHeaderColumns;
+	for(int alphaHeaderIndex = 0; alphaHeaderIndex < alpha->getHeader()->getNumAttributes(); alphaHeaderIndex++) {
+		for(int betaHeaderIndex = 0; betaHeaderIndex < beta->getHeader()->getNumAttributes(); betaHeaderIndex++) {
+			if(alpha->getHeader()->getAttributeAtIndex(alphaHeaderIndex) == beta->getHeader()->getAttributeAtIndex(betaHeaderIndex)) {
+				// If the columns match - create and insert new tuple
+				matchingHeaderColumns.insert(std::pair<int, int> (alphaHeaderIndex, betaHeaderIndex));		//FIXME is this syntax correct?
+			}
+		}
+	}
+
+	// for testing
+	std::cout << "matchingHeaderColumns: " << std::endl;
+	for(auto eachPair : matchingHeaderColumns) {
+		std::cout << "(" << eachPair.first << ", " << eachPair.second << ")" << std::endl;
+	}
+
+
+	// call isJoinable
+	// combineTuples
+}
+
+Header* Interpreter::combineHeaders(Header* alphaHeader, Header* betaHeader) {
+	Header* joinedHeader = new Header;
+	// add each attribute from alphaHeader
+	for(int i = 0; i < alphaHeader->getNumAttributes(); i++) {
+		joinedHeader->addAttribute(alphaHeader->getAttributeAtIndex(i));
+	}
+	// add unique elements from betaHeader
+	for(int i = 0; i < betaHeader->getNumAttributes(); i++) {
+		// if the attribute isn't in alphaHeader - add it to joinedHeader
+		if(!alphaHeader->containsAttribute(betaHeader->getAttributeAtIndex(i))) {
+			joinedHeader->addAttribute(betaHeader->getAttributeAtIndex(i));
+		}
+	}
+
+	return joinedHeader;
 }

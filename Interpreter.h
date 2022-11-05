@@ -13,6 +13,7 @@ class Interpreter {
 public:
 	Interpreter(DatalogProgram datalogProgram);
 	Relation* evaluatePredicate(const Predicate& p);
+	bool evaluateRule(const Rule& rule);
 	// r is set as a temp relation in each iteration of evaluatePredicate() and is accessed by the select, project, and rename functions
 	Relation* r;
 	std::vector<std::string> variableVector;
@@ -21,6 +22,10 @@ public:
 	Relation* select2(int position1, int position2);
 	Relation* project();
 	Relation* rename();
+	Relation* join(Relation* alpha, Relation* beta);
+	Header* combineHeaders(Header* alphaHeader, Header* betaHeader);
+//	bool isJoinable();
+//	Tuple combineTuples();
 private:
 	Database database;
 };
