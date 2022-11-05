@@ -34,6 +34,11 @@ public:
 	std::vector<Predicate*> getBodyPredicatesVector() const {
 		return bodyPredicates;
 	}
+
+	Predicate* getHeadPredicate() const {
+		return headPredicate;
+	}
+
 private:
 	Predicate* headPredicate;
 	std::vector<Predicate*> bodyPredicates;

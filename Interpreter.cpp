@@ -53,6 +53,7 @@ Interpreter::Interpreter(DatalogProgram datalogProgram) {
 		}
 		// TODO repeat if new tuples were added
 
+
 	// for each query 'q' - Run through select, project, and rename
 	std::vector<Predicate*> queryVector = datalogProgram.getQueryVector();
 	for(int queryIndex = 0; queryIndex < int(queryVector.size()); queryIndex++) {
@@ -121,13 +122,15 @@ bool Interpreter::evaluateRule(const Rule& rule) {		// * r  is an instance data 
 	// (1) evaluatePredicate (same as for queries)
 
 	// (2) join the relations that result
-	std::vector<Predicate*> bodyPredicates = rule.getBodyPredicatesVector();
+	std::vector<Predicate*> bodyPredicates = rule.getBodyPredicatesVector(); // FIXME I need to be passing in the evaluated predicates before joining them
 	// take the relation of the first bodyPredicate and store it as result
 	Relation* result = database.getRelationByName(bodyPredicates.at(0)->getId());
 	for(int bodyPredicateIndex = 1; bodyPredicateIndex < bodyPredicates.size(); bodyPredicateIndex++) {
 		// for bodyPredicates at index 1 and on, join: alpha - result with beta - relation corresponding to the bodyPredicate at bodyPredicateIndex
-		result = join(result, database.getRelationByName(bodyPredicates.at(bodyPredicateIndex)->getId()));
+		result = join(result, database.getRelationByName(bodyPredicates.at(bodyPredicateIndex)->getId()), rule.getHeadPredicate()->getId());
 	}
+	std::cout << "New relation after joining: " << std::endl;
+	result->toString();
 	// (3) project columns that appear in the head predicate
 
 	// (4) rename the relation to make it union-compatible
@@ -202,7 +205,7 @@ Relation* Interpreter::rename() {
 	return relationToReturn;
 }
 
-Relation* Interpreter::join(Relation* alpha, Relation* beta) {
+Relation* Interpreter::join(Relation* alpha, Relation* beta, std::string newRelationName) {
 	// for testing
 	std::cout << "alpha.toString():" << std::endl;
 	alpha->toString();
@@ -212,6 +215,9 @@ Relation* Interpreter::join(Relation* alpha, Relation* beta) {
 	// combine headers
 	Header* joinedHeader = combineHeaders(alpha->getHeader(), beta->getHeader());
 
+	// create the new relation
+	Relation* joinedRelation = new Relation(newRelationName, joinedHeader);
+
 	// for testing
 	std::cout << "joinedHeader: ";
 	for(int i = 0; i < joinedHeader->getNumAttributes(); i++) {
@@ -220,12 +226,12 @@ Relation* Interpreter::join(Relation* alpha, Relation* beta) {
 	std::cout << std::endl;
 
 	// get the tuples containing indexes from alpha and beta that match (alphaHeaderIndex, betaHeaderIndex)
-	std::set<std::pair<int, int>> matchingHeaderColumns;
+	matchingHeaderColumns.clear();
 	for(int alphaHeaderIndex = 0; alphaHeaderIndex < alpha->getHeader()->getNumAttributes(); alphaHeaderIndex++) {
 		for(int betaHeaderIndex = 0; betaHeaderIndex < beta->getHeader()->getNumAttributes(); betaHeaderIndex++) {
 			if(alpha->getHeader()->getAttributeAtIndex(alphaHeaderIndex) == beta->getHeader()->getAttributeAtIndex(betaHeaderIndex)) {
 				// If the columns match - create and insert new tuple
-				matchingHeaderColumns.insert(std::pair<int, int> (alphaHeaderIndex, betaHeaderIndex));		//FIXME is this syntax correct?
+				matchingHeaderColumns.insert(std::pair<int, int> (alphaHeaderIndex, betaHeaderIndex));
 			}
 		}
 	}
@@ -236,9 +242,17 @@ Relation* Interpreter::join(Relation* alpha, Relation* beta) {
 		std::cout << "(" << eachPair.first << ", " << eachPair.second << ")" << std::endl;
 	}
 
+	// for every combination of tuples in alpha and beta
+	for(auto alphaTuple : alpha->getRows()) {
+		for(auto betaTuple : beta->getRows()) {
+			if(isJoinable(alphaTuple, betaTuple)) {
+				Tuple joinedTuple = combineTuples(alphaTuple, betaTuple);
+				joinedRelation->addTuple(joinedTuple);
+			}
+		}
+	}
 
-	// call isJoinable
-	// combineTuples
+	return joinedRelation;
 }
 
 Header* Interpreter::combineHeaders(Header* alphaHeader, Header* betaHeader) {
@@ -256,4 +270,45 @@ Header* Interpreter::combineHeaders(Header* alphaHeader, Header* betaHeader) {
 	}
 
 	return joinedHeader;
+}
+
+bool Interpreter::isJoinable(Tuple alpha, Tuple beta) {
+	bool canJoin = true;
+	//for each pair of matchingHeaderColumns indexes
+	for(auto eachPair : matchingHeaderColumns) {
+		if(alpha.getValueAtIndex(eachPair.first) != beta.getValueAtIndex(eachPair.second)) {
+			canJoin = false;
+		}
+	}
+
+	return canJoin;
+}
+
+Tuple Interpreter::combineTuples(Tuple alpha, Tuple beta) {
+	Tuple combinedTuple;
+
+	// first, add all elements from alpha
+	for(int valueIndex = 0; valueIndex < alpha.getNumValues(); valueIndex++) {
+		combinedTuple.addValue(alpha.getValueAtIndex(valueIndex));
+	}
+
+	// second add tuples from the beta that are not in alpha
+	// grab indexes of beta that have already been added
+	std::vector<int> betaIndexesToNotAdd;
+	for(auto eachPair : matchingHeaderColumns) {
+		betaIndexesToNotAdd.push_back(eachPair.second);
+	}
+	for(int valueIndex = 0; valueIndex < beta.getNumValues(); valueIndex++) {
+		bool inVector = false;
+		for(int i = 0; i < betaIndexesToNotAdd.size(); i++) {
+			if(valueIndex == betaIndexesToNotAdd.at(i)) {
+				inVector = true;
+			}
+		}
+		if(!inVector) {
+			combinedTuple.addValue(beta.getValueAtIndex(valueIndex));
+		}
+	}
+
+	return combinedTuple;
 }

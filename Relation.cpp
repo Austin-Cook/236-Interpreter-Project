@@ -40,7 +40,7 @@ std::string Relation::getName() const {
 }
 
 Header* Relation::getHeader() const {
-	return this->header;		//FIXME careful that this header is not modified
+	return this->header;
 }
 
 std::set<Tuple> Relation::getRows() const {
