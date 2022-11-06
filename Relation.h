@@ -14,6 +14,7 @@ class Relation {
 public:
 	Relation(std::string name, Header* header);
 	void addTuple(Tuple tuple);
+	bool addTuple_ReturnBool(Tuple tuple);
 	void toString();
 	std::string getName() const;
 	Header* getHeader() const;

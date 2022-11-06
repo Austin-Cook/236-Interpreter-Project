@@ -17,7 +17,7 @@ public:
 		}
 	}
 
-	std::string toString() {
+	std::string toString() const {
 		std::string outputString = "";
 		outputString.append(headPredicate->toString() + " :- ");
 		for(int i = 0; i < (int)bodyPredicates.size(); ++i) {

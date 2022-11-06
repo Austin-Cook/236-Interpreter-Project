@@ -14,9 +14,12 @@ void Relation::addTuple(Tuple tuple) {
 	rows.insert(tuple);
 }
 
+bool Relation::addTuple_ReturnBool(Tuple tuple) {
+	return rows.insert(tuple).second;
+}
+
 void Relation::toString() {
 	for (Tuple row : rows) {
-
 		if(row.getNumValues() != header->getNumAttributes()) {
 			std::cerr << "ERROR (in Relation.cpp): Number of values in tuple != Number of header attributes!" << std::endl << "A Relation is being created with an inconsistent number of values in a tuple";
 			exit(1);
