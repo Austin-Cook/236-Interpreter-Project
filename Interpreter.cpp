@@ -145,6 +145,7 @@ bool Interpreter::evaluateRule(const Rule& rule) {		// * r  is an instance data 
 
 	// get indexes to project, and corresponding names for rename
 	// for each parameter in the rule's head predicate
+	std::cout << "________________________________________" << std::endl;
 	for(int paramIndex = 0; paramIndex < rule.getHeadPredicate()->getParameterVector().size(); paramIndex++) {
 		// for each header attribute in the resulting relation
 		bool found = false;
@@ -152,8 +153,11 @@ bool Interpreter::evaluateRule(const Rule& rule) {		// * r  is an instance data 
 			// if the param in the headPredicate == the attribute name in the new relation header
 			if(rule.getHeadPredicate()->getParameterVector().at(paramIndex)->toString() == r->getHeader()->getAttributeAtIndex(headerIndex)) {
 				found = true;
+
+				std::cout << "paramIndex: " << paramIndex << std::endl;
+				std::cout << "headerIndex: " << headerIndex << std::endl;
 				variableIndexVector.push_back(headerIndex);
-				variableVector.push_back(rule.getHeadPredicate()->getParameterVector().at(paramIndex)->toString());
+				variableVector.push_back(database.getRelationByName(rule.getHeadPredicate()->getId())->getHeader()->getAttributeAtIndex(paramIndex));
 			}
 		}
 		if(found == false) {
@@ -176,9 +180,23 @@ bool Interpreter::evaluateRule(const Rule& rule) {		// * r  is an instance data 
 	std::cout << "result after projecting: " << std::endl;
 	result->toString();
 
-	// (4) rename the relation to make it union-compatible
-	//rename();
 
+	// (4) rename the relation to make it union-compatible
+
+	// for testing
+	std::cout << "Header before renaming: " << std::endl;
+	for(int i = 0; i < result->getHeader()->getNumAttributes(); i++) {
+		std::cout << result->getHeader()->getAttributeAtIndex(i) << ", ";
+	}
+	std::cout << std::endl;
+
+	result = rename();
+
+	std::cout << "Header after renaming: " << std::endl;
+	for(int i = 0; i < result->getHeader()->getNumAttributes(); i++) {
+		std::cout << result->getHeader()->getAttributeAtIndex(i) << ", ";
+	}
+	std::cout << std::endl;
 
 	// (5) union the relation with the database
 
