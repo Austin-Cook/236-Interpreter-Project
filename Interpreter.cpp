@@ -127,7 +127,7 @@ bool Interpreter::evaluateRule(const Rule& rule) {		// * r  is an instance data 
 	// (1) evaluatePredicate (same as for queries)
 	std::vector<Predicate*> bodyPredicates = rule.getBodyPredicatesVector();
 	std::vector<Relation*> relationsFromBodyPredicates;
-	for(int i = 0; i < bodyPredicates.size(); i++) {
+	for(int i = 0; i < int(bodyPredicates.size()); i++) {
 		relationsFromBodyPredicates.push_back(evaluatePredicate(*(bodyPredicates.at(i))));
 	}
 
@@ -135,7 +135,7 @@ bool Interpreter::evaluateRule(const Rule& rule) {		// * r  is an instance data 
 	// (2) join the relations that result
 	// take the relation of the first bodyPredicate and store it as result
 	Relation* result = relationsFromBodyPredicates.at(0);
-	for(int bodyPredicateIndex = 1; bodyPredicateIndex < bodyPredicates.size(); bodyPredicateIndex++) {
+	for(int bodyPredicateIndex = 1; bodyPredicateIndex < int(bodyPredicates.size()); bodyPredicateIndex++) {
 		// for relationsFromBodyPredicates at index 1 and on, join: alpha - result with beta - relation corresponding to the bodyPredicate at bodyPredicateIndex
 		result = join(result, relationsFromBodyPredicates.at(bodyPredicateIndex), rule.getHeadPredicate()->getId());
 	}
@@ -150,7 +150,7 @@ bool Interpreter::evaluateRule(const Rule& rule) {		// * r  is an instance data 
 
 	// get indexes to project, and corresponding names for rename
 	// for each parameter in the rule's head predicate
-	for(int paramIndex = 0; paramIndex < rule.getHeadPredicate()->getParameterVector().size(); paramIndex++) {
+	for(int paramIndex = 0; paramIndex < int(rule.getHeadPredicate()->getParameterVector().size()); paramIndex++) {
 		// for each header attribute in the resulting relation
 		bool found = false;
 		for(int headerIndex = 0; headerIndex < r->getHeader()->getNumAttributes(); headerIndex++) {
@@ -400,7 +400,7 @@ Tuple Interpreter::combineTuples(Tuple alpha, Tuple beta) {
 	}
 	for(int valueIndex = 0; valueIndex < beta.getNumValues(); valueIndex++) {
 		bool inVector = false;
-		for(int i = 0; i < betaIndexesToNotAdd.size(); i++) {
+		for(int i = 0; i < int(betaIndexesToNotAdd.size()); i++) {
 			if(valueIndex == betaIndexesToNotAdd.at(i)) {
 				inVector = true;
 			}

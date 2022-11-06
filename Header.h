@@ -27,7 +27,7 @@ public:
 
 	bool containsAttribute(std::string attribute) {
 		bool found = false;
-		for(int i = 0; i < attributes.size(); i++) {
+		for(int i = 0; i < int(attributes.size()); i++) {
 			if(attributes.at(i) == attribute) {
 				found = true;
 			}
