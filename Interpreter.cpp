@@ -131,7 +131,6 @@ bool Interpreter::evaluateRule(const Rule& rule) {		// * r  is an instance data 
 		relationsFromBodyPredicates.push_back(evaluatePredicate(*(bodyPredicates.at(i))));
 	}
 
-
 	// (2) join the relations that result
 	// take the relation of the first bodyPredicate and store it as result
 	Relation* result = relationsFromBodyPredicates.at(0);
@@ -139,9 +138,6 @@ bool Interpreter::evaluateRule(const Rule& rule) {		// * r  is an instance data 
 		// for relationsFromBodyPredicates at index 1 and on, join: alpha - result with beta - relation corresponding to the bodyPredicate at bodyPredicateIndex
 		result = join(result, relationsFromBodyPredicates.at(bodyPredicateIndex), rule.getHeadPredicate()->getId());
 	}
-//	std::cout << "New relation after joining: " << std::endl;
-//	result->toString();
-
 
 	// (3) project columns that appear in the head predicate
 	r = result;
@@ -157,8 +153,6 @@ bool Interpreter::evaluateRule(const Rule& rule) {		// * r  is an instance data 
 			// if the param in the headPredicate == the attribute name in the new relation header
 			if(rule.getHeadPredicate()->getParameterVector().at(paramIndex)->toString() == r->getHeader()->getAttributeAtIndex(headerIndex)) {
 				found = true;
-//				std::cout << "paramIndex: " << paramIndex << std::endl;
-//				std::cout << "headerIndex: " << headerIndex << std::endl;
 				variableIndexVector.push_back(headerIndex);
 				variableVector.push_back(database.getRelationByName(rule.getHeadPredicate()->getId())->getHeader()->getAttributeAtIndex(paramIndex));
 			}
@@ -169,42 +163,14 @@ bool Interpreter::evaluateRule(const Rule& rule) {		// * r  is an instance data 
 	}
 
 	result = project();
-//	std::cout << "Tuples in result after reject - " << std::endl;
-//	for(auto tuple : result->getRows()) {
-//		tuple.toString();
-//	}
-
-//	std::cout << "result after projecting: " << std::endl;
-//	result->toString();
-
 
 	// (4) rename the relation to make it union-compatible
-
-//	// for testing
-//	std::cout << "Header before renaming: " << std::endl;
-//	for(int i = 0; i < result->getHeader()->getNumAttributes(); i++) {
-//		std::cout << result->getHeader()->getAttributeAtIndex(i) << ", ";
-//	}
-//	std::cout << std::endl;
-
 	r = result;
 	result = rename();
-//	std::cout << "Tuples in result after rename - " << std::endl;
-//	for(auto tuple : result->getRows()) {
-//		tuple.toString();
-//	}
-
-//	std::cout << "Header after renaming: " << std::endl;
-//	for(int i = 0; i < result->getHeader()->getNumAttributes(); i++) {
-//		std::cout << result->getHeader()->getAttributeAtIndex(i) << ", ";
-//	}
-//	std::cout << std::endl;
-
 
 	// (5) union the relation with the database
 	bool changed = false;
 	r = database.getRelationByName(rule.getHeadPredicate()->getId());
-//	std::cout << "Printing tuples in result - " << std::endl;
 	std::cout << rule.toString() << std::endl;
 	for(auto tuple : result->getRows()) {
 		if(r->addTuple_ReturnBool(tuple)) {
@@ -227,14 +193,6 @@ bool Interpreter::evaluateRule(const Rule& rule) {		// * r  is an instance data 
 			}
 		}
 	}
-
-//	// for testing
-//	if(changed) {
-//		std::cout << "It was changed!" << std::endl;
-//	} else {
-//		std::cout << "Nothing changed" << std::endl;
-//	}
-//	database.getRelationByName(rule.getHeadPredicate()->getId())->toString();
 
 	return changed;
 }
@@ -306,24 +264,11 @@ Relation* Interpreter::rename() {
 }
 
 Relation* Interpreter::join(Relation* alpha, Relation* beta, std::string newRelationName) {
-//	// for testing
-//	std::cout << "alpha.toString():" << std::endl;
-//	alpha->toString();
-//	std::cout << "beta.toString():" << std::endl;
-//	beta->toString();
-
 	// combine headers
 	Header* joinedHeader = combineHeaders(alpha->getHeader(), beta->getHeader());
 
 	// create the new relation
 	Relation* joinedRelation = new Relation(newRelationName, joinedHeader);
-
-//	// for testing
-//	std::cout << "joinedHeader: ";
-//	for(int i = 0; i < joinedHeader->getNumAttributes(); i++) {
-//		std::cout << joinedHeader->getAttributeAtIndex(i) << ", ";
-//	}
-//	std::cout << std::endl;
 
 	// get the tuples containing indexes from alpha and beta that match (alphaHeaderIndex, betaHeaderIndex)
 	matchingHeaderColumns.clear();
@@ -335,12 +280,6 @@ Relation* Interpreter::join(Relation* alpha, Relation* beta, std::string newRela
 			}
 		}
 	}
-
-//	// for testing
-//	std::cout << "matchingHeaderColumns: " << std::endl;
-//	for(auto eachPair : matchingHeaderColumns) {
-//		std::cout << "(" << eachPair.first << ", " << eachPair.second << ")" << std::endl;
-//	}
 
 	// for every combination of tuples in alpha and beta
 	for(auto alphaTuple : alpha->getRows()) {
