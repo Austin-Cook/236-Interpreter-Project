@@ -3,6 +3,7 @@
 //
 
 #include "Interpreter.h"
+#include "Graph.h"
 #include <vector>
 
 // Create the Relations Here
@@ -79,6 +80,10 @@ Interpreter::Interpreter(DatalogProgram datalogProgram) {
 		}
 		resultingRelation->toString();
 	}
+
+	std::cout << std::endl << "Test Graph Class:" << std::endl;		// FIXME DELETEME
+	Graph testGraph(datalogProgram.getRuleVector());
+	std::cout << testGraph.dependencyGraphToString();
 }
 
 // A Predicate is a specific query

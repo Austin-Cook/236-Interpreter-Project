@@ -5,6 +5,7 @@
 #include <fstream>
 
 #include "Database.h"	// Only for testing
+#include "Graph.h"		// Only for testing
 
 enum mode {
 	RUN = 0,
@@ -59,8 +60,13 @@ int main(int argc, char** argv) {
 			std::cout << "  " << error;
 		}
 
-		// PROJECT 3 - Pass DatalogProgram object into a new Interpreter to create the Relations
-		Interpreter interpreter(parser.getDatalog());
+//		// PROJECT 3 and 4- Pass DatalogProgram object into a new Interpreter to create the Relations
+//		Interpreter interpreter(parser.getDatalog());
+
+		// FIXME DELETEME Test code
+		Graph testGraph(parser.getDatalog().getRuleVector());
+		std::cout << "dependencyGraph: " << std::endl << testGraph.dependencyGraphToString() << std::endl;
+		std::cout << "reverseDependencyGraph: " << std::endl << testGraph.reverseDependencyGraphToString();
 
 		// Deallocate memory
 		delete lexer;

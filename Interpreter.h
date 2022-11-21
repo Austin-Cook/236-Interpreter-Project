@@ -25,7 +25,7 @@ public:
 private:
 	Database database;
 	// r is set as a temp relation in each iteration of evaluatePredicate() and is accessed by the select, project, and rename functions
-	Relation* r;									//FIXME was it ok to move these three variables to private??
+	Relation* r;
 	std::vector<std::string> variableVector;
 	std::vector<int> variableIndexVector;
 	std::set<std::pair<int, int>> matchingHeaderColumns;
