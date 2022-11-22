@@ -7,21 +7,16 @@
 
 Graph::Graph(std::vector<Rule*> const ruleVector) {
 	// copy ruleVector and build idIndexMap
-	std::cout << "idIndexMap values:" << std::endl; // FIXME DELETEME
-	for(int ruleIndex = 0; ruleIndex < ruleVector.size(); ruleIndex++) {
+	for(int ruleIndex = 0; ruleIndex < int(ruleVector.size()); ruleIndex++) {
 		this->ruleVector.push_back(ruleVector.at(ruleIndex));
 		idIndexMap[ruleVector.at(ruleIndex)->getHeadPredicate()->getId()] = ruleIndex;
-
-		// FIXME DELETEME
-		std::cout << "Rule index: " << std::to_string(ruleIndex) << ", Id at the index: " << ruleVector.at(ruleIndex)->getHeadPredicate()->getId() << std::endl;
 	}
-	std::cout << std::endl; // FIXME DELETEME
 
 	buildDependencyGraphs();
 
 	// run dfsf on reverse dependency graph using order of low to high number
 	std::vector<int> orderForFirstDFSF;	// Should be index 0 counting up to n-1
-	for(int i = 0; i < ruleVector.size(); i++) {
+	for(int i = 0; i < int(ruleVector.size()); i++) {
 		orderForFirstDFSF.push_back(i);
 	}
 	std::vector<int> postOrderVector = dfsf_ReturnsPostOrdering(orderForFirstDFSF, reverseDependencyGraph);
@@ -30,53 +25,23 @@ Graph::Graph(std::vector<Rule*> const ruleVector) {
 	std::vector<int> reversedPostOrderVector = reverseVector(postOrderVector);
 
 	// run dfsf on forward dependency graph using
-	std::set<std::set<int>> forestSet = dfsf_ReturnsForest(reversedPostOrderVector, dependencyGraph);
-
-	// FIXME DELETEME
-	std::cout << "postorderVector:" << std::endl;	// FIXME DELETME
-	for(int i = 0; i < postOrderVector.size(); i++) {
-		std::cout << postOrderVector.at(i);
-		if(i < postOrderVector.size() - 1) {
-			std::cout << ", ";
-		}
-	}
-	std::cout << std::endl;
-
-	std::cout << "reversedPostOrderVector:" << std::endl; // FIXME DELETEME
-	for(int i = 0; i < reversedPostOrderVector.size(); i++) {
-		std::cout << reversedPostOrderVector.at(i);
-		if(i < reversedPostOrderVector.size() - 1) {
-			std::cout << ", ";
-		}
-	}
-	std::cout << std::endl;
-
-	std::cout << "Forest:" << std::endl;
-	int tempNum = 0;
-	for(auto tree : forestSet) {
-		std::cout << "SCC" << tempNum << ": ";
-		for(auto component : tree) {
-			std::cout << std::to_string(component) << ", ";
-		}
-		std::cout << std::endl;
-		tempNum++;
-	}
+	treeVector = dfsf_ReturnsForest(reversedPostOrderVector, dependencyGraph);
 }
 
 void Graph::buildDependencyGraphs() {
 	// for each rule/node
-	for(int ruleIndex = 0; ruleIndex < ruleVector.size(); ruleIndex++) {
+	for(int ruleIndex = 0; ruleIndex < int(ruleVector.size()); ruleIndex++) {
 		// add the rule as a valid key (in case there are no adjacent nodes, the rule still must show up as a key
 		addEmptyRule(ruleIndex);
 	}
 
 	// for each left rule
-	for(int leftRuleIndex = 0; leftRuleIndex < ruleVector.size(); leftRuleIndex++) {
+	for(int leftRuleIndex = 0; leftRuleIndex < int(ruleVector.size()); leftRuleIndex++) {
 		// for each right rule corresponding to the left rule
-		for(int rightRuleIndex = 0; rightRuleIndex < ruleVector.at(leftRuleIndex)->getBodyPredicatesVector().size(); rightRuleIndex++) {
+		for(int rightRuleIndex = 0; rightRuleIndex < int(ruleVector.at(leftRuleIndex)->getBodyPredicatesVector().size()); rightRuleIndex++) {
 			std::string rightRuleId = ruleVector.at(leftRuleIndex)->getBodyPredicatesVector().at(rightRuleIndex)->getId();
 			// for all left rules
-			for(int eachLeftRuleIndex = 0; eachLeftRuleIndex < ruleVector.size(); eachLeftRuleIndex++) {
+			for(int eachLeftRuleIndex = 0; eachLeftRuleIndex < int(ruleVector.size()); eachLeftRuleIndex++) {
 				// if that left rule id is == to the right rule in 2nd for loop
 				if(getIndexFromId(rightRuleId) == getIndexFromId(ruleVector.at(eachLeftRuleIndex)->getHeadPredicate()->getId())) {
 					addAdjacentRule(leftRuleIndex, eachLeftRuleIndex);
@@ -112,7 +77,7 @@ int Graph::getIndexFromId(std::string id) {
 std::vector<int> Graph::reverseVector(std::vector<int> vectorToReverse) {
 	std::stack<int> tempStack;
 	std::vector<int> reversedVector;
-	for(int i = 0; i < vectorToReverse.size(); i++) {
+	for(int i = 0; i < int(vectorToReverse.size()); i++) {
 		tempStack.push(vectorToReverse.at(i));
 	}
 	while(!tempStack.empty()) {
@@ -127,17 +92,17 @@ std::vector<int> Graph::dfsf_ReturnsPostOrdering(std::vector<int> const& orderTo
 	std::vector<int> postOrderVector;
 	// clear visited vector
 	visitedVector.clear();
-	for(int i = 0; i < ruleVector.size(); i++) {
+	for(int i = 0; i < int(ruleVector.size()); i++) {
 		visitedVector.push_back(false);
 	}
 
 	// for each vertex in orderToSearchVector
-	for(int vertexIndex = 0; vertexIndex < orderToSearchVector.size(); vertexIndex++) {
+	for(int vertexIndex = 0; vertexIndex < int(orderToSearchVector.size()); vertexIndex++) {
 		// if it has NOT been visited
 		if(visitedVector.at(orderToSearchVector.at(vertexIndex)) == false) {
 			std::vector<int> postOrderVectorFromOneTree = dfs_ReturnsPostOrdering(vertexIndex, graphToSearch);
 			// add these items to postOrderVector();
-			for(int i = 0; i < postOrderVectorFromOneTree.size(); i++) {
+			for(int i = 0; i < int(postOrderVectorFromOneTree.size()); i++) {
 				postOrderVector.push_back(postOrderVectorFromOneTree.at(i));
 			}
 		}
@@ -166,22 +131,21 @@ void Graph::dfs_ReturnsPostOrdering_Helper(std::vector<int>& postOrderVector, in
 	postOrderVector.push_back(vertex);
 }
 
-std::set<std::set<int>> Graph::dfsf_ReturnsForest(std::vector<int> const& orderToSearchVector, std::map<int, std::set<int>>& graphToSearch) {
-	std::set<std::set<int>> SCCSets;
+std::vector<std::set<int>> Graph::dfsf_ReturnsForest(std::vector<int> const& orderToSearchVector, std::map<int, std::set<int>>& graphToSearch) {
+	std::vector<std::set<int>> SCCSets;
 
 	// calls the helper
 	// clear visited vector
 	visitedVector.clear();
-	for(int i = 0; i < ruleVector.size(); i++) {
+	for(int i = 0; i < int(ruleVector.size()); i++) {
 		visitedVector.push_back(false);
 	}
 
 	// for each vertex in orderToSearchVector
-	for(int vertexIndex = 0; vertexIndex < orderToSearchVector.size(); vertexIndex++) {
+	for(int vertexIndex = 0; vertexIndex < int(orderToSearchVector.size()); vertexIndex++) {
 		// if it has NOT been visited
 		if(visitedVector.at(orderToSearchVector.at(vertexIndex)) == false) {
-			std::cout << "Starting new tree with: " << vertexIndex << std::endl;
-			SCCSets.insert(dfs_ReturnsSearchTree(orderToSearchVector.at(vertexIndex), graphToSearch));
+			SCCSets.push_back(dfs_ReturnsSearchTree(orderToSearchVector.at(vertexIndex), graphToSearch));
 		}
 	}
 
@@ -207,17 +171,21 @@ void Graph::dfs_ReturnsSearchTree_Helper(std::set<int>& treeSet, int vertex, std
 
 	// searchTree insert before popping vertex off stack
 	treeSet.insert(vertex);
-	std::cout << "Inserting at: " << std::to_string(vertex) << std::endl;
 }
 
 std::string Graph::dependencyGraphToString() {
 	std::string stringToReturn = "";
 	// for each rule
 	for(auto rule : dependencyGraph) {
-		stringToReturn += std::to_string(rule.first) + ": ";
+		stringToReturn += "R" + std::to_string(rule.first) + ":";
 		// for each adjacent rule
+		int i = 0;
 		for(auto adjacentRule : rule.second) {
-			stringToReturn += std::to_string(adjacentRule) + ", ";
+			stringToReturn += "R" + std::to_string(adjacentRule);
+			if(i < int(rule.second.size()) - 1) {
+				stringToReturn += ",";
+			}
+			i++;
 		}
 		stringToReturn += "\n";
 	}
@@ -238,4 +206,12 @@ std::string Graph::reverseDependencyGraphToString() {
 	}
 
 	return stringToReturn;
+}
+
+std::vector<std::set<int>> Graph::getSCCs() {
+	return treeVector;
+}
+
+std::map<int, std::set<int>> Graph::getDependencyGraph() {
+	return dependencyGraph;
 }

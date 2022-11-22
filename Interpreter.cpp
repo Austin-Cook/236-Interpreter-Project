@@ -38,26 +38,66 @@ Interpreter::Interpreter(DatalogProgram datalogProgram) {
 		database.addTupleToRelation(tuple, factVector.at(factIndex)->getId());
 	}
 
+	// for project 5
+	Graph optimizationDependencyGraphs(datalogProgram.getRuleVector());
+	std::vector<std::set<int>> SCCs = optimizationDependencyGraphs.getSCCs();
+	std::map<int, std::set<int>> dependencyGraph = optimizationDependencyGraphs.getDependencyGraph();
+	std::cout << "Dependency Graph" << std::endl << optimizationDependencyGraphs.dependencyGraphToString() << std::endl;
+
 	// for each rule 'rule'
 	std::cout << "Rule Evaluation" << std::endl;
 	std::vector<Rule*> ruleVector = datalogProgram.getRuleVector();
-	bool tuplesAdded = true;
-	int timesLooped = 0;
-	// fixed point algorithm
-	while(tuplesAdded == true) {
-		// reset the variable(s) keeping track of if new tuples were added
-		tuplesAdded = false;
-		// evaluate all the rules
-		for (int ruleIndex = 0; ruleIndex < int(ruleVector.size()); ruleIndex++) {
-			// for each rule 'r'
-			if (evaluateRule(*(ruleVector.at(ruleIndex))) == true) {
-				tuplesAdded = true;
+
+	// evaluate SCCs
+	for(int sccIndex = 0; sccIndex < SCCs.size(); sccIndex++) {
+		int firstSCCElement = *(SCCs.at(sccIndex).begin());
+		int timesLooped = 0;
+
+		// print SCC header
+		std::cout << "SCC: ";
+		int i = 0;
+		for(auto SCC : SCCs.at(sccIndex)) {
+			std::cout << "R" << SCC;
+			if(i < SCCs.at(sccIndex).size() - 1) {
+				std::cout << ",";
+			}
+			i++;
+		}
+		std::cout << std::endl;
+
+		// if the SCC only has 1 element & isn't a self loop - run once
+		if(SCCs.at(sccIndex).size() == 1 && dependencyGraph[firstSCCElement].find(firstSCCElement) == dependencyGraph[firstSCCElement].end()) {
+			evaluateRule(*(ruleVector.at(firstSCCElement)));
+			timesLooped = 1;
+		} // else - the node is a self loop OR has more than one node - run fixed point
+		else {
+			bool tuplesAdded = true;
+			while(tuplesAdded == true) {
+				// reset the variable(s) keeping track of if new tuples were added
+				tuplesAdded = false;
+				// evaluate all the rules in the SCC
+				for (auto SCC : SCCs.at(sccIndex)) {
+					if (evaluateRule(*(ruleVector.at(SCC))) == true) {
+						tuplesAdded = true;
+					}
+				}
+				timesLooped++;
 			}
 		}
-		timesLooped++;
-	}
-	std::cout << std::endl << "Schemes populated after " << timesLooped << " passes through the Rules." << std::endl << std::endl;
 
+		// print SCC footer
+		std::cout << timesLooped << " passes: ";
+		i = 0;
+		for(auto SCC : SCCs.at(sccIndex)) {
+			std::cout << "R" << SCC;
+			if(i < SCCs.at(sccIndex).size() - 1) {
+				std::cout << ",";
+			}
+			i++;
+		}
+		std::cout << std::endl;
+	}
+	std::cout << std::endl;
 
 	// for each query 'q' - Run through select, project, and rename
 	std::cout << "Query Evaluation" << std::endl;
@@ -80,10 +120,6 @@ Interpreter::Interpreter(DatalogProgram datalogProgram) {
 		}
 		resultingRelation->toString();
 	}
-
-	std::cout << std::endl << "Test Graph Class:" << std::endl;		// FIXME DELETEME
-	Graph testGraph(datalogProgram.getRuleVector());
-	std::cout << testGraph.dependencyGraphToString();
 }
 
 // A Predicate is a specific query
