@@ -49,7 +49,7 @@ Interpreter::Interpreter(DatalogProgram datalogProgram) {
 	std::vector<Rule*> ruleVector = datalogProgram.getRuleVector();
 
 	// evaluate SCCs
-	for(int sccIndex = 0; sccIndex < SCCs.size(); sccIndex++) {
+	for(int sccIndex = 0; sccIndex < int(SCCs.size()); sccIndex++) {
 		int firstSCCElement = *(SCCs.at(sccIndex).begin());
 		int timesLooped = 0;
 
@@ -58,7 +58,7 @@ Interpreter::Interpreter(DatalogProgram datalogProgram) {
 		int i = 0;
 		for(auto SCC : SCCs.at(sccIndex)) {
 			std::cout << "R" << SCC;
-			if(i < SCCs.at(sccIndex).size() - 1) {
+			if(i < int(SCCs.at(sccIndex).size()) - 1) {
 				std::cout << ",";
 			}
 			i++;
@@ -90,7 +90,7 @@ Interpreter::Interpreter(DatalogProgram datalogProgram) {
 		i = 0;
 		for(auto SCC : SCCs.at(sccIndex)) {
 			std::cout << "R" << SCC;
-			if(i < SCCs.at(sccIndex).size() - 1) {
+			if(i < int(SCCs.at(sccIndex).size()) - 1) {
 				std::cout << ",";
 			}
 			i++;
